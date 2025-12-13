@@ -19,17 +19,10 @@
 #include "../UIImage.h"
 #include "../UIRect.h"
 
-class UIScreen
+class UIScreen : public UIElement
 {
 public:
-    // Tracks if the UI is active or closing
-    enum class UIState
-    {
-        Active,
-        Closing
-    };
-
-    UIScreen(class Game* game, const std::string& fontName);
+    UIScreen(UIElement& parent, const std::string& fontName);
     virtual ~UIScreen();
 
     // UIScreen subclasses can override these
@@ -37,14 +30,10 @@ public:
     
     void HandleKeyPress(int key, bool isActive = false);
 
-    virtual void OnActiveKeyPress(int key) {}
+    virtual void OnActiveKeyPress(int key) { }
     virtual void OnKeyPress(int key) { }
 
-    // Set state to closing
-    void Close();
-
-    // Get state of UI screen
-    UIState GetState() const { return mState; }
+    void SetIsVisible(bool isVisible) override;
 
     // Game getter
     class Game* GetGame() { return mGame; }
@@ -63,9 +52,6 @@ protected:
     // Configure positions
     Vector2 mPos;
     Vector2 mSize;
-
-    // State
-    UIState mState;
 
     // List of buttons, texts, and images
     int mSelectedButtonIndex;

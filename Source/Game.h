@@ -6,12 +6,15 @@
 #include "Math.h"
 #include "SceneManager.h"
 #include "Event.h"
+#include "UI/UIElement.h"
 
 class Game
 {
 public:
-    Game();
-    ~Game();
+    static Game& Instance();
+
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
 
     Event<bool> OnPauseChanged;
 
@@ -19,10 +22,6 @@ public:
     void RunLoop();
     void Shutdown();
     void Quit() { mIsRunning = false; }
-
-    // UI Management
-    void PushUI(class UIScreen* screen) { mUIStack.emplace_back(screen); }
-    std::vector<class UIScreen*>& GetUIStack() { return mUIStack; }
 
     // Game State
     void SetPaused(bool paused);
@@ -35,15 +34,6 @@ public:
     class Renderer* GetRenderer() { return mRenderer; }
     class AudioSystem* GetAudio() { return mAudio; }
     SDL_Window* GetWindow() { return mWindow; }
-    
-    // UI Access
-    class HUD* GetHUD() { return mHUD; }
-    class TutorialHUD* GetTutorialHUD() { return mTutorialHUD; }
-    class UpgradeHUD* GetUpgradeHUD() { return mUpgradeHUD; }
-    
-    void SetHUD(class HUD* hud) { mHUD = hud; }
-    void SetTutorialHUD(class TutorialHUD* hud) { mTutorialHUD = hud; }
-    void SetUpgradeHUD(class UpgradeHUD* hud) { mUpgradeHUD = hud; }
 
     // Debug
     bool IsDebugging() const { return mIsDebugging; }
@@ -59,6 +49,9 @@ public:
     Vector2 GetMouseAbsolutePosition();
 
 private:
+    Game();
+    ~Game();
+
     void UpdateGame(float deltaTime);
 
     // Systems
@@ -67,12 +60,6 @@ private:
 
     // SDL
     SDL_Window* mWindow;
-
-    // UI
-    std::vector<class UIScreen*> mUIStack;
-    class HUD* mHUD;
-    class UpgradeHUD* mUpgradeHUD;
-    class TutorialHUD* mTutorialHUD;
 
     // Game state
     Uint32 mTicksCount;

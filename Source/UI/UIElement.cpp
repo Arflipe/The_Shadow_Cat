@@ -2,18 +2,48 @@
 #include "../Game.h"
 #include "../Renderer/Renderer.h"
 
-UIElement::UIElement(class Game* game, const Vector2 &offset, const float scale, const float angle, int drawOrder)
-        :mGame(game)
-        ,mOffset(offset)
+UIElement::UIElement(const Vector2 &offset, const float scale, const float angle, int drawOrder)
+        :mOffset(offset)
         ,mScale(scale)
         ,mAngle(angle)
         ,mIsVisible(true)
         ,mDrawOrder(drawOrder)
+        ,mParent(nullptr)
 {
-    mGame->GetRenderer()->AddUIElement(this);
+}
+
+UIElement::UIElement(UIElement& parent, const Vector2 &offset, const float scale, const float angle)
+    :mParent(&parent)
+    ,mOffset(offset)
+    ,mScale(scale)
+    ,mAngle(angle)
+    ,mIsVisible(true)
+{
+    parent.AddChild(this);
+    mDrawOrder = parent.GetDrawOrder() + 1;
 }
 
 UIElement::~UIElement()
 {
-    mGame->GetRenderer()->RemoveUIElement(this);
+    Game::Instance().GetRenderer()->RemoveUIElement(this);
+    if (mParent) mParent->RemoveChild(this);
+}
+
+void UIElement::DrawTree(class Shader* shader)
+{
+    Draw(shader);
+    for (auto child : mChildren)
+        if (child->IsVisible())
+            child->DrawTree(shader);
+}
+
+void UIElement::AddChild(UIElement* child)
+{
+    mChildren.push_back(child);
+}
+
+void UIElement::RemoveChild(UIElement* child)
+{
+    auto it = std::find(mChildren.begin(), mChildren.end(), child);
+    if (it != mChildren.end()) mChildren.erase(it);
 }

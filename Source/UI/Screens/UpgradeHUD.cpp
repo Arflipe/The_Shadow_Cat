@@ -6,8 +6,8 @@
 
 #include "../../LevelManager.h"
 
-UpgradeHUD::UpgradeHUD(class Game* game, const std::string& fontName)
-    :UIScreen(game, fontName)
+UpgradeHUD::UpgradeHUD(UIElement& parent, const std::string& fontName)
+    :UIScreen(parent, fontName)
 {   
    
 }
@@ -105,16 +105,16 @@ void UpgradeHUD::UpdateSelectedCard(int indexChange)
 
 void UpgradeHUD::Update(float deltaTime)
 {   
-    // Nothing to show
-    if (LevelManager::Instance().GetPlayer() == nullptr) return;
-    if (LevelManager::Instance().GetPlayer()->GetUpgradePoints() < 1) return;
+    auto player = LevelManager::Instance().GetPlayer();
+    if (player == nullptr) return;
+    if (player->GetUpgradePoints() < 1) return;
 
     // Already paused
-    if (mGame->IsPaused() || mBackImage != nullptr) return;
+    if (Game::Instance().IsPaused() || mBackImage != nullptr) return;
 
     InitCards();
 
-    mGame->SetPaused(true);
+    Game::Instance().SetPaused(true);
 }
 
 
@@ -139,7 +139,7 @@ void UpgradeHUD::OnActiveKeyPress(int key)
     case SDLK_RETURN:
     case SDLK_KP_ENTER:
         LevelManager::Instance().GetPlayer()->SpendUpgradePoint(mCurrentUpgradeInfo[mSelectedButtonIndex]);
-        mGame->SetPaused(false);
+        Game::Instance().SetPaused(false);
 
         this->Clear();
         break;

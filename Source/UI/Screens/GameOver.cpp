@@ -1,14 +1,15 @@
 #include "GameOver.h"
 #include "../../Game.h"
 
-GameOver::GameOver(class Game* game, const std::string& fontName)
-    :UIScreen(game, fontName)
+
+GameOver::GameOver(UIElement& parent, const std::string& fontName)
+    :UIScreen(parent, fontName)
 {
     const float SCALE = 0.7f;
 
     // Stop all sounds and play game over music
-    game->GetAudio()->StopAllSounds();
-    game->GetAudio()->PlaySound("m03_game_over.mp3", true, 0.5f);
+    Game::Instance().GetAudio()->StopAllSounds();
+    Game::Instance().GetAudio()->PlaySound("m03_game_over.mp3", true, 0.5f);
 
     switch (SceneManager::Instance().GetCurrentScene()) {
     case GameScene::Level1_Boss:
@@ -27,10 +28,9 @@ GameOver::GameOver(class Game* game, const std::string& fontName)
 
     AddText("GAME OVER :(", Vector2(0.0f, -150.0f), SCALE, 0.0f, 60);
 
-    AddButton("TRY AGAIN", [this, game]() {
-        this->Close();
-        game->ResetGame();
-    }, Vector2(0.0f, +100.0f), SCALE);
+    AddButton("TRY AGAIN",
+        [this]() { Game::Instance().ResetGame(); },
+        Vector2(0.0f, +100.0f), SCALE);
 
     // Setup UI Screen initial state
     mSelectedButtonIndex = 0;
@@ -48,6 +48,8 @@ GameOver::GameOver(class Game* game, const std::string& fontName)
         text->SetTextColor(Vector3::One);
         text->SetBackgroundColor(Vector4::Zero); // transparent
     }  
+
+    UIElement::SetIsVisible(false);
 }
 
 void GameOver::OnActiveKeyPress(int key)

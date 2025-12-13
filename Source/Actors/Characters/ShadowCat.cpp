@@ -165,7 +165,7 @@ void ShadowCat::OnUpdate(float deltaTime)
             }
             
             // Play random one of the two sounds
-            mGame->GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 0.6f);
+            Game::Instance().GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 0.6f);
         }
     }
     else
@@ -176,7 +176,7 @@ void ShadowCat::OnUpdate(float deltaTime)
 
 void ShadowCat::Kill()
 {
-    mGame->SetGameOver(true);
+    Game::Instance().SetGameOver(true);
 }
 
 std::vector<UpgradeInfo> ShadowCat::GetRandomUpgrades() const

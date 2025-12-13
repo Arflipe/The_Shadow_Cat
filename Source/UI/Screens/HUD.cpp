@@ -6,8 +6,8 @@
 
 #include "../../LevelManager.h"
 
-HUD::HUD(class Game* game, const std::string& fontName, int maxHealth)
-    :UIScreen(game, fontName),
+HUD::HUD(UIElement& parent, const std::string& fontName, int maxHealth)
+    : UIScreen(parent, fontName),
     mMaxHealth(maxHealth),
     mHealth(maxHealth)
 {   
@@ -129,8 +129,8 @@ void HUD::Update(float deltaTime)
     InitSkillIcons();
 
     // Update cursor pos  ------------------- //
-    Vector2 mouseAbsPos = mGame->GetMouseAbsolutePosition();
-    Vector2 mouseRelPos = mGame->GetMouseWorldPosition();
+    Vector2 mouseAbsPos = Game::Instance().GetMouseAbsolutePosition();
+    Vector2 mouseRelPos = Game::Instance().GetMouseWorldPosition();
     auto player = LevelManager::Instance().GetPlayer();
     Vector2 playerPos = player ? player->GetPosition() : Vector2::Zero;
 
@@ -143,14 +143,14 @@ void HUD::Update(float deltaTime)
     mCursorImage->SetAbsolutePos(mouseAbsPos);
 
     // Pause handlers
-    if (mGame->IsPaused()) {
+    if (Game::Instance().IsPaused()) {
         mCursorImage->SetIsVisible(false);
     } else {
         mCursorImage->SetIsVisible(true);
     }
 
     // Pause with no upgrades is normal pause
-    if (mGame->IsPaused() && LevelManager::Instance().GetPlayer() && LevelManager::Instance().GetPlayer()->GetUpgradePoints() == 0) {
+    if (Game::Instance().IsPaused() && LevelManager::Instance().GetPlayer() && LevelManager::Instance().GetPlayer()->GetUpgradePoints() == 0) {
         mPauseFade->SetIsVisible(true);
         mPauseText->SetIsVisible(true);
     } else {

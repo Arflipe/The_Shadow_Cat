@@ -7,8 +7,8 @@
 class UIImage : public UIElement
 {
 public:
-    UIImage(class Game* game, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f, int drawOrder = 100);
-    UIImage(class Game* game, const std::string &imagePath, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f, int drawOrder = 100);
+    UIImage(UIElement& parent, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f);
+    UIImage(UIElement& parent, const std::string &imagePath, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f);
 
     ~UIImage();
 

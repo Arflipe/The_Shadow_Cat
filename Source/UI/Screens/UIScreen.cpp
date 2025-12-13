@@ -7,19 +7,18 @@
 // ----------------------------------------------------------------
 
 #include "UIScreen.h"
+#include "../../UIManager.h"
 #include "../../Game.h"
-#include "../../Renderer/Shader.h"
 #include "../../Renderer/Renderer.h"
 
-UIScreen::UIScreen(Game* game, const std::string& fontName)
-    :mGame(game)
+UIScreen::UIScreen(UIElement& parent, const std::string& fontName)
+    :UIElement(parent)
     ,mPos(0.f, 0.f)
     ,mSize(0.f, 0.f)
-    ,mState(UIState::Active)
     ,mSelectedButtonIndex(-1)
 {
-    game->PushUI(this);
-    mFont = game->GetRenderer()->GetFont(fontName);
+    UIManager::Instance().GetRootUI()->AddScreen(this);
+    mFont = Game::Instance().GetRenderer()->GetFont(fontName);
 }
 
 UIScreen::~UIScreen()
@@ -56,14 +55,16 @@ void UIScreen::HandleKeyPress(int key, bool isActive)
     if (isActive) OnActiveKeyPress(key);
 }
 
-void UIScreen::Close()
+void UIScreen::SetIsVisible(bool isVisible)
 {
-    mState = UIState::Closing;
+    UIElement::SetIsVisible(isVisible);
+    if (isVisible) UIManager::Instance().PushUI(this);
+    else UIManager::Instance().RemoveUI(this);
 }
 
 UIText* UIScreen::AddText(const std::string& name, const Vector2& offset, float scale, float angle, const int pointSize, const int unsigned wrapLength, int drawOrder)
 {
-    UIText* text = new UIText(mGame, name, mFont, offset, scale, angle, pointSize, wrapLength, drawOrder);
+    UIText* text = new UIText(*this, name, mFont, offset, scale, angle, pointSize, wrapLength);
     mTexts.emplace_back(text);
     
     return text;
@@ -71,7 +72,7 @@ UIText* UIScreen::AddText(const std::string& name, const Vector2& offset, float 
 
 UIButton* UIScreen::AddButton(const std::string& name, std::function<void()> onClick, const Vector2& offset, float scale, float angle, const int pointSize, const int unsigned wrapLength, int drawOrder)
 {
-    UIButton* button = new UIButton(mGame, onClick, name, mFont, offset, scale, angle, pointSize, wrapLength, drawOrder);
+    UIButton* button = new UIButton(*this, name, onClick, mFont, offset, scale, angle, pointSize, wrapLength);
     mButtons.emplace_back(button);
 
     return button;
@@ -79,7 +80,7 @@ UIButton* UIScreen::AddButton(const std::string& name, std::function<void()> onC
 
 UIImage* UIScreen::AddImage(const std::string& imagePath, const Vector2& offset, float scale, float angle, int drawOrder)
 {
-    UIImage* image = new UIImage(mGame, imagePath, offset, scale, angle, drawOrder);
+    UIImage* image = new UIImage(*this, imagePath, offset, scale, angle);
     mImages.emplace_back(image);
 
     return image;
@@ -87,7 +88,7 @@ UIImage* UIScreen::AddImage(const std::string& imagePath, const Vector2& offset,
 
 UIRect *UIScreen::AddRect(const Vector2 &offset, const Vector2 &size, float scale, float angle, int drawOrder)
 {
-    UIRect* rect = new UIRect(mGame, offset, size, scale, angle, drawOrder);
+    UIRect* rect = new UIRect(*this, offset, size, scale, angle);
     mRects.emplace_back(rect);
 
     return rect;

@@ -130,7 +130,7 @@ void Boss::OnUpdate(float deltaTime)
             if (playerInArena)
             {
                 mCurrentState = BossState::Combat;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Idle -> Combat");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Idle -> Combat");
             }
             break;
             
@@ -138,12 +138,12 @@ void Boss::OnUpdate(float deltaTime)
             if (playerInAttackRange)
             {
                 mCurrentState = BossState::Attacking;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Combat -> Attacking");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Combat -> Attacking");
             }
             else if (!playerInArena)
             {
                 mCurrentState = BossState::Idle;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Combat -> Idle (player left arena)");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Combat -> Idle (player left arena)");
             }
             break;
             
@@ -151,7 +151,7 @@ void Boss::OnUpdate(float deltaTime)
             if (!playerInAttackRange)
             {
                 mCurrentState = BossState::Combat;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Attacking -> Combat");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Attacking -> Combat");
             }
             break;
             
@@ -224,7 +224,7 @@ void Boss::Kill()
     // Play death animation
     mAnimatorComponent->PlayAnimation("Death", 1);
     
-    if (mGame->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         SDL_Log("Boss: Defeated!");
     }
@@ -284,7 +284,7 @@ void Boss::UpdateSpawning(float deltaTime)
     if (mSpawnTimer >= SPAWN_ANIMATION_DURATION)
     {
         mCurrentState = BossState::Idle;
-        if (mGame->IsDebugging())
+        if (Game::Instance().IsDebugging())
         {
             SDL_Log("Boss: Spawning complete -> Idle");
         }

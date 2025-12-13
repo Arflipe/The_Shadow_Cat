@@ -16,7 +16,6 @@ GameRenderer& GameRenderer::Instance()
 }
 
 GameRenderer::GameRenderer()
-    : mGame(nullptr)
 {
 }
 
@@ -25,33 +24,27 @@ GameRenderer::~GameRenderer()
     Shutdown();
 }
 
-void GameRenderer::Initialize(Game* game)
-{
-    mGame = game;
-}
+void GameRenderer::Initialize() { }
 
-void GameRenderer::Shutdown()
-{
-    mGame = nullptr;
-}
+void GameRenderer::Shutdown() { }
 
 void GameRenderer::Render()
 {
-    auto renderer = mGame->GetRenderer();
+    auto renderer = Game::Instance().GetRenderer();
     renderer->Clear();
 
     DrawBackground();
     DrawActors();
 
     // Draw UI
-    renderer->DrawAllUI();
+    renderer->DrawUI();
 
     renderer->Present();
 }
 
 void GameRenderer::DrawBackground()
 {
-    auto renderer = mGame->GetRenderer();
+    auto renderer = Game::Instance().GetRenderer();
     std::string backgroundPath = SceneManager::Instance().GetBackgroundPath();
     Texture* backgroundTexture = renderer->GetTexture(backgroundPath);
     
@@ -87,8 +80,8 @@ void GameRenderer::DrawBackground()
 
 void GameRenderer::DrawActors()
 {
-    auto renderer = mGame->GetRenderer();
-    bool isDebugging = mGame->IsDebugging();
+    auto renderer = Game::Instance().GetRenderer();
+    bool isDebugging = Game::Instance().IsDebugging();
 
     for (auto drawable : LevelManager::Instance().GetDrawables())
     {

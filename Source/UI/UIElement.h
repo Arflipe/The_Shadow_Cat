@@ -2,15 +2,13 @@
 
 #include "../Math.h"
 #include "../Renderer/Shader.h"
-#include "../Game.h"
+#include <vector>
 
 class UIElement {
 public:
-    UIElement(class Game* game, const Vector2 &offset, const float scale = 1.0f, const float angle = 0.0f, int drawOrder = 100);
+    UIElement(const Vector2 &offset = Vector2::Zero, const float scale = 1.0f, const float angle = 0.0f, int drawOrder = 100);
+    UIElement(UIElement& parent, const Vector2 &offset = Vector2::Zero, const float scale = 1.0f, const float angle = 0.0f);
     ~UIElement();
-
-    // Game getter
-    class Game* GetGame() { return mGame; }
 
     // Getters/setters
     const Vector2& GetOffset() const { return mOffset; }
@@ -25,21 +23,28 @@ public:
     float GetAngle() const { return mAngle; }
     void SetAngle(const float angle) { mAngle = angle; }
 
-    bool IsVisible(const bool isVisible) const { return mIsVisible; }
-    void SetIsVisible(const bool isVisible) { mIsVisible = isVisible; }
-
     int GetDrawOrder() const { return mDrawOrder; }
-
-    virtual void Draw(class Shader* shader) {};
+    
+    void AddChild(UIElement* child);
+    void RemoveChild(UIElement* child);
+    
+    void DrawTree(class Shader* shader);
+    virtual void Draw(class Shader* shader) { };
+    
+    virtual void SetIsVisible(bool isVisible) { mIsVisible = isVisible; }
+    bool IsVisible() const { return mIsVisible; }
 
 protected:
-    class Game* mGame;
+    UIElement* mParent = nullptr;
+    std::vector<UIElement*> mChildren;
 
     Vector2 mOffset;
     Vector2 mAbsolutePos = Vector2(-1.0f, -1.0f); // ignore if negative
     float mScale;
     float mAngle;
 
-    bool mIsVisible;
     int mDrawOrder;
+
+private:
+    bool mIsVisible;
 };

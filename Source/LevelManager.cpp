@@ -243,7 +243,7 @@ void LevelManager::UpdatePortalActivation()
         int aliveEnemies = CountAliveEnemies();
         int aliveBosses = CountAliveBosses();
 
-        bool shouldActivate = (aliveEnemies == 0 && aliveBosses == 0) || mGame->IsDebugging() || mGame->IsGodMode();
+        bool shouldActivate = (aliveEnemies == 0 && aliveBosses == 0) || Game::Instance().IsDebugging() || Game::Instance().IsGodMode();
 
         if (shouldActivate && !mLevelPortal->IsActive())
         {
@@ -291,7 +291,7 @@ bool LevelManager::CheckLevelTransition(const Vector2& playerPos, GameScene& out
             outNextScene = GameScene::Level3_Boss;
             return true;
         case GameScene::Level3_Boss:
-            mGame->SetGameWon(true);
+            Game::Instance().SetGameWon(true);
             return false;
         default:
             return false;
@@ -539,7 +539,7 @@ int** LevelManager::LoadLevelFromFile(const std::string& fileName, int& outWidth
         }
     }
 
-    if (mGame->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         SDL_Log("--- Level CSV Content (%d x %d) ---", outWidth, outHeight);
         for (int i = 0; i < outHeight; ++i)
@@ -583,7 +583,7 @@ void LevelManager::BuildLevel(int** levelData, int width, int height)
     mLevelPortal = new LevelPortal(mGame);
     mLevelPortal->SetPosition(Vector2(portalX, portalY));
 
-    if (mGame->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         SDL_Log("[BUILD] Debug mode - showing portal immediately");
         mLevelPortal->Activate();

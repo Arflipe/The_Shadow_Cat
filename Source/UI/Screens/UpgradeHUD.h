@@ -8,7 +8,7 @@
 class UpgradeHUD : public UIScreen
 {
 public:
-    UpgradeHUD(class Game* game, const std::string& fontName);
+    UpgradeHUD(UIElement& parent, const std::string& fontName);
 
     void Update(float deltaTime) override;
     void OnActiveKeyPress(int key) override;

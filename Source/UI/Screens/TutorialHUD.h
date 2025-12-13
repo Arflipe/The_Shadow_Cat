@@ -3,11 +3,12 @@
 #include <string>
 
 #include "UIScreen.h"
+#include "../../SceneManager.h"
 
 class TutorialHUD : public UIScreen
 {
 public:
-    TutorialHUD(class Game* game, const std::string& fontName);
+    TutorialHUD(UIElement& parent, const std::string& fontName);
 
     bool IsControlVisible() const { return showControls; }
 

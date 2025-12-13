@@ -3,6 +3,7 @@
 #include "InputHandler.h"
 #include "SceneManager.h"
 #include "GameRenderer.h"
+#include "UIManager.h"
 #include "SystemInitializer.h"
 #include "SkillFactory.h"
 #include "Random.h"
@@ -17,13 +18,16 @@
 #include "UI/Screens/WinScreen.h"
 #include <SDL.h>
 
+Game& Game::Instance()
+{
+    static Game instance;
+    return instance;
+}
+
 Game::Game()
     : mRenderer(nullptr),
       mAudio(nullptr),
       mWindow(nullptr),
-      mHUD(nullptr),
-      mUpgradeHUD(nullptr),
-      mTutorialHUD(nullptr),
       mTicksCount(0),
       mIsRunning(true),
       mIsFullscreen(false),
@@ -51,16 +55,16 @@ bool Game::Initialize()
     mRenderer = new Renderer(mWindow);
     mRenderer->Initialize(GameConstants::WINDOW_WIDTH, GameConstants::WINDOW_HEIGHT);
 
-    
     SDL_ShowCursor(SDL_DISABLE);
     
     mAudio = new AudioSystem();
     mAudio->CacheAllSounds();
     
-    InputHandler::Instance().Initialize(this);
+    InputHandler::Instance().Initialize();
     LevelManager::Instance().Initialize(this);
     SceneManager::Instance().Initialize(this);
-    GameRenderer::Instance().Initialize(this);
+    GameRenderer::Instance().Initialize();
+    UIManager::Instance().Initialize();
 
     SkillFactory::InitializeSkills();
 
@@ -97,7 +101,8 @@ void Game::UpdateGame(float deltaTime)
         SetPaused(true);
 
         bool screenExists = false;
-        for (auto screen : mUIStack)
+        auto& uiStack = UIManager::Instance().GetUIStack();
+        for (auto screen : uiStack)
         {
             if (dynamic_cast<GameOver*>(screen) != nullptr || dynamic_cast<WinScreen*>(screen) != nullptr)
             {
@@ -109,9 +114,9 @@ void Game::UpdateGame(float deltaTime)
         if (!screenExists)
         {
             if (mIsGameOver)
-                new GameOver(this, "../Assets/Fonts/Pixellari.ttf");
+                new GameOver(*UIManager::Instance().GetRootUI(), "../Assets/Fonts/Pixellari.ttf");
             else
-                new WinScreen(this, "../Assets/Fonts/Pixellari.ttf");
+                new WinScreen(*UIManager::Instance().GetRootUI(), "../Assets/Fonts/Pixellari.ttf");
         }
     }
 
@@ -122,28 +127,7 @@ void Game::UpdateGame(float deltaTime)
     if (mAudio) mAudio->Update(deltaTime);
 
     // Update UI
-    for (auto ui : mUIStack)
-    {
-        if (ui->GetState() == UIScreen::UIState::Active)
-        {
-            ui->Update(deltaTime);
-        }
-    }
-
-    // Remove closed UI screens
-    auto iter = mUIStack.begin();
-    while (iter != mUIStack.end())
-    {
-        if ((*iter)->GetState() == UIScreen::UIState::Closing)
-        {
-            delete *iter;
-            iter = mUIStack.erase(iter);
-        }
-        else
-        {
-            ++iter;
-        }
-    }
+    UIManager::Instance().Update(deltaTime);
 }
 
 void Game::SetPaused(bool paused)
@@ -159,20 +143,6 @@ void Game::SetPaused(bool paused)
 void Game::ResetGame()
 {
     mAudio->StopAllSounds();
-
-    auto iter = mUIStack.begin();
-    while (iter != mUIStack.end())
-    {
-        if ((*iter)->GetState() == UIScreen::UIState::Closing)
-        {
-            delete *iter;
-            iter = mUIStack.erase(iter);
-        }
-        else
-        {
-            ++iter;
-        }
-    }
 
     SetGameOver(false);
     SetGameWon(false);
@@ -213,16 +183,11 @@ Vector2 Game::GetMouseAbsolutePosition()
 
 void Game::Shutdown()
 {
+    UIManager::Instance().Shutdown();
     GameRenderer::Instance().Shutdown();
     SceneManager::Instance().Shutdown();
     InputHandler::Instance().Shutdown();
     LevelManager::Instance().Shutdown();
-
-    for (auto ui : mUIStack)
-    {
-        delete ui;
-    }
-    mUIStack.clear();
 
     mRenderer->Shutdown();
     delete mRenderer;

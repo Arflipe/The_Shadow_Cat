@@ -5,7 +5,7 @@
 class WinScreen : public UIScreen
 {
 public:
-    WinScreen(class Game* game, const std::string& fontName);
+    WinScreen(UIElement& parent, const std::string& fontName);
 
     void OnActiveKeyPress(int key) override;
 };

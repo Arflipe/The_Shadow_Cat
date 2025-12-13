@@ -13,7 +13,7 @@ public:
     GameRenderer& operator=(const GameRenderer&) = delete;
 
     // Initialize with game reference
-    void Initialize(Game* game);
+    void Initialize();
     void Shutdown();
 
     // Main rendering
@@ -27,7 +27,4 @@ private:
     // Rendering helpers
     void DrawBackground();
     void DrawActors();
-
-    // Game reference
-    Game* mGame;
 };

@@ -3,12 +3,8 @@
 
 int main(int argc, char **argv)
 {
-    Game game;
-    bool success = game.Initialize();
-    if (success)
-    {
-        game.RunLoop();
-    }
-    game.Shutdown();
+    bool success = Game::Instance().Initialize();
+    if (success) Game::Instance().RunLoop();
+    Game::Instance().Shutdown();
     return 0;
 }

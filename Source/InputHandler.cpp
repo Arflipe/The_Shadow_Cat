@@ -1,4 +1,5 @@
 #include "InputHandler.h"
+#include "UIManager.h"
 #include "Game.h"
 #include "LevelManager.h"
 #include "GameConstants.h"
@@ -16,8 +17,7 @@ InputHandler& InputHandler::Instance()
 }
 
 InputHandler::InputHandler()
-    : mGame(nullptr),
-      mController(nullptr)
+    : mController(nullptr)
 {
 }
 
@@ -26,10 +26,8 @@ InputHandler::~InputHandler()
     Shutdown();
 }
 
-void InputHandler::Initialize(Game* game)
+void InputHandler::Initialize()
 {
-    mGame = game;
-
     // Check for existing game controllers
     for (int i = 0; i < SDL_NumJoysticks(); ++i)
     {
@@ -49,7 +47,6 @@ void InputHandler::Shutdown()
         SDL_GameControllerClose(mController);
         mController = nullptr;
     }
-    mGame = nullptr;
 }
 
 void InputHandler::ProcessInput()
@@ -60,7 +57,7 @@ void InputHandler::ProcessInput()
         switch (event.type)
         {
         case SDL_QUIT:
-            mGame->Quit();
+            Game::Instance().Quit();
             break;
 
         case SDL_CONTROLLERDEVICEADDED:
@@ -125,38 +122,33 @@ void InputHandler::HandleControllerRemoved(SDL_JoystickID instanceID)
 
 void InputHandler::HandleKeyPress(SDL_Keycode key, Uint8 repeat)
 {
-    // UI input - send to all screens, mark which is active (top of stack)
-    auto& uiStack = mGame->GetUIStack();
-    if (!uiStack.empty())
-    {
-        auto topScreen = uiStack.back();
-        for (auto screen : uiStack) screen->HandleKeyPress(key, screen == topScreen);
-    }
+    auto& uiStack = UIManager::Instance().GetUIStack();
+    UIManager::Instance().GetRootUI()->HandleKeyPress(key, uiStack.empty() ? nullptr : uiStack.back());
 
     // Fullscreen toggle (F11) - only on initial press
     if (key == SDLK_F11 && repeat == 0)
     {
-        bool isFullscreen = mGame->IsFullscreen();
-        mGame->SetFullscreen(!isFullscreen);
+        bool isFullscreen = Game::Instance().IsFullscreen();
+        Game::Instance().SetFullscreen(!isFullscreen);
 
         if (!isFullscreen)
         {
-            SDL_SetWindowFullscreen(mGame->GetWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+            SDL_SetWindowFullscreen(Game::Instance().GetWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
             int w, h;
-            SDL_GetWindowSize(mGame->GetWindow(), &w, &h);
-            mGame->GetRenderer()->UpdateViewport(w, h);
+            SDL_GetWindowSize(Game::Instance().GetWindow(), &w, &h);
+            Game::Instance().GetRenderer()->UpdateViewport(w, h);
         }
         else
         {
-            SDL_SetWindowFullscreen(mGame->GetWindow(), 0);
-            mGame->GetRenderer()->UpdateViewport(GameConstants::WINDOW_WIDTH, GameConstants::WINDOW_HEIGHT);
+            SDL_SetWindowFullscreen(Game::Instance().GetWindow(), 0);
+            Game::Instance().GetRenderer()->UpdateViewport(GameConstants::WINDOW_WIDTH, GameConstants::WINDOW_HEIGHT);
         }
     }
 
     // Debug toggle (F1) - only on initial press
     if (key == SDLK_F1 && repeat == 0)
     {
-        mGame->SetDebugging(!mGame->IsDebugging());
+        Game::Instance().SetDebugging(!Game::Instance().IsDebugging());
     }
 
     // Pause toggle (ESC) - only on initial press
@@ -166,16 +158,13 @@ void InputHandler::HandleKeyPress(SDL_Keycode key, Uint8 repeat)
             LevelManager::Instance().GetPlayer() && 
             LevelManager::Instance().GetPlayer()->GetUpgradePoints() == 0)
         {
-            mGame->SetPaused(!mGame->IsPaused());
+            Game::Instance().SetPaused(!Game::Instance().IsPaused());
         }
     }
 }
 
 void InputHandler::HandleMouseButton()
 {
-    // UI input
-    if (!mGame->GetUIStack().empty())
-    {
-        mGame->GetUIStack().back()->HandleKeyPress(SDLK_UNKNOWN); // Mouse clicks
-    }
+    auto& uiStack = UIManager::Instance().GetUIStack();
+    UIManager::Instance().GetRootUI()->HandleKeyPress(SDLK_UNKNOWN, uiStack.empty() ? nullptr : uiStack.back());
 }

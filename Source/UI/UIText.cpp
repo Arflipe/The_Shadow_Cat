@@ -4,15 +4,28 @@
 #include "../Renderer/Shader.h"
 #include "../GameConstants.h"
 
-UIText::UIText(class Game* game, const std::string& text, class Font* font, const Vector2 &offset, float scale, float angle,
-               int pointSize, const unsigned wrapLength, int drawOrder)
-   :UIImage(game, offset, scale, angle, drawOrder)
+UIText::UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, float scale, float angle,
+               int pointSize, const unsigned wrapLength)
+   :UIImage(parent, offset, scale, angle)
    ,mFont(font)
    ,mPointSize(pointSize)
    ,mWrapLength(wrapLength)
    ,mTextColor(Color::White)
    ,mBackgroundColor(0.0f,0.0f,0.0f,1.0f)
    ,mMargin(Vector2(50.0f, 10.f))
+{
+    SetText(text);
+}
+
+UIText::UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, Vector3 color, Vector4 backgroundColor,
+    float scale, float angle, int pointSize, const unsigned wrapLength)
+    :UIImage(parent, offset, scale, angle)
+    ,mFont(font)
+    ,mPointSize(pointSize)
+    ,mWrapLength(wrapLength)
+    ,mTextColor(color)
+    ,mBackgroundColor(backgroundColor)
+    ,mMargin(Vector2(50.0f, 10.f))
 {
     SetText(text);
 }
@@ -53,8 +66,7 @@ void UIText::SetTextColor(const Vector3 &color)
 
 void UIText::Draw(class Shader* shader)
 {
-    if(!mTexture || !mIsVisible)
-        return;
+    if(!mTexture) return;
 
     // Draw Text Background
     if (mBackgroundColor.w > 0.0001f) // Skip if fully transparent

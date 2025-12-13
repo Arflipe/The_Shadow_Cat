@@ -5,7 +5,7 @@
 class GameOver : public UIScreen
 {
 public:
-    GameOver(class Game* game, const std::string& fontName);
+    GameOver(UIElement& parent, const std::string& fontName);
 
     void OnActiveKeyPress(int key) override;
 };

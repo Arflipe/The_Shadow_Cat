@@ -7,7 +7,7 @@
 class HUD : public UIScreen
 {
 public:
-    HUD(class Game* game, const std::string& fontName, int maxHealth = 6);
+    HUD(UIElement& parent, const std::string& fontName, int maxHealth = 6);
 
     void Update(float deltaTime) override;
 

@@ -12,7 +12,7 @@
 //     mPatrolWaypoints[0] = patrolPointA;
 //     mPatrolWaypoints[1] = patrolPointB;
 //
-//     if (mGame->IsDebugging())
+//     if (Game::Instance().IsDebugging())
 //     {
 //         SDL_Log("Spawner created at position (%.2f, %.2f) with spawn distance %.2f",
 //                 mPosition.x, mPosition.y, mSpawnDistance);
@@ -34,7 +34,7 @@
 // bool Spawner::IsPlayerNearby() const
 // {
 //     // Get camera position (top-left corner of viewport)
-//     Vector2 cameraPos = mGame->GetCameraPos();
+//     Vector2 cameraPos = Game::Instance().GetCameraPos();
 //
 //     // Calculate viewport bounds with spawn distance buffer
 //     float viewportLeft = cameraPos.x - mSpawnDistance;
@@ -49,7 +49,7 @@
 //
 // void Spawner::SpawnEnemy()
 // {
-//     if (mGame->IsDebugging())
+//     if (Game::Instance().IsDebugging())
 //     {
 //         SDL_Log("Spawner at (%.2f, %.2f) triggering enemy spawn!", mPosition.x, mPosition.y);
 //     }
@@ -59,7 +59,7 @@
 //     auto enemy = new Enemy(mGame, mPatrolWaypoints[0], mPatrolWaypoints[1], mEnemyType);
 //     enemy->SetPosition(mPosition);
 //
-//     if (mGame->IsDebugging())
+//     if (Game::Instance().IsDebugging())
 //     {
 //         SDL_Log("Enemy spawned at (%.2f, %.2f) with waypoints: (%.2f, %.2f) to (%.2f, %.2f)",
 //                 mPosition.x, mPosition.y,

@@ -1,23 +1,22 @@
 #include "WinScreen.h"
 #include "../../Game.h"
 
-WinScreen::WinScreen(class Game* game, const std::string& fontName)
-    :UIScreen(game, fontName)
+WinScreen::WinScreen(UIElement& parent, const std::string& fontName)
+    :UIScreen(parent, fontName)
 {
     const float SCALE = 0.7f;
 
     // Stop all sounds and play victory music
-    game->GetAudio()->StopAllSounds();
-    game->GetAudio()->PlaySound("m02_victory.mp3", true, 0.5f);
+    Game::Instance().GetAudio()->StopAllSounds();
+    Game::Instance().GetAudio()->PlaySound("m02_victory.mp3", true, 0.5f);
 
     AddImage("../Assets/HUD/Background/WinBackground.png", Vector2::Zero, 1.0f, 0.0f, -1);
 
     AddText("YOU WIN!", Vector2(0.0f, -150.0f), SCALE, 0.0f, 60);
     
-    AddButton("BACK TO MENU", [this, game]() {
-        this->Close();
-        game->ResetGame();
-    }, Vector2(0.0f, +100.0f), SCALE);
+    AddButton("BACK TO MENU",
+        [this]() { Game::Instance().ResetGame(); },
+        Vector2(0.0f, +100.0f), SCALE);
 
     // Setup UI Screen initial state
     mSelectedButtonIndex = 0;
@@ -34,7 +33,9 @@ WinScreen::WinScreen(class Game* game, const std::string& fontName)
     for (auto text : mTexts) {
         text->SetTextColor(Vector3::One);
         text->SetBackgroundColor(Vector4::Zero); // transparent
-    }  
+    } 
+
+    UIElement::SetIsVisible(false);
 }
 
 void WinScreen::OnActiveKeyPress(int key)

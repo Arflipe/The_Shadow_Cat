@@ -7,17 +7,17 @@
 #include "../GameConstants.h"
 
 
-UIImage::UIImage(class Game* game, const Vector2 &offset, const float scale, const float angle, int drawOrder)
-        :UIElement(game, offset, scale, angle, drawOrder)
+UIImage::UIImage(UIElement& parent, const Vector2 &offset, const float scale, const float angle)
+        :UIElement(parent, offset, scale, angle)
         ,mTexture(nullptr)
 {
 
 }
 
-UIImage::UIImage(class Game* game, const std::string &imagePath, const Vector2 &offset, const float scale, const float angle, int drawOrder)
-        :UIElement(game, offset, scale, angle)
+UIImage::UIImage(UIElement& parent, const std::string &imagePath, const Vector2 &offset, const float scale, const float angle)
+        :UIElement(parent, offset, scale, angle)
 {
-    mTexture = GetGame()->GetRenderer()->GetTexture(imagePath);
+    mTexture = Game::Instance().GetRenderer()->GetTexture(imagePath);
 }
 
 UIImage::~UIImage()
@@ -27,7 +27,7 @@ UIImage::~UIImage()
 
 void UIImage::Draw(class Shader* shader)
 {
-    if(!mTexture || !mIsVisible)
+    if(!mTexture || !IsVisible())
         return;
 
     // Scale the quad by the width/height of texture

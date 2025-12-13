@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "../Game.h"
 #include "../GameConstants.h"
+#include "../UIManager.h"
 #include "../UI/UIElement.h"
 
 Renderer::Renderer(SDL_Window *window)
@@ -240,12 +241,10 @@ void Renderer::DrawPolygon(const std::vector<Vector2> &points, const Vector3 &co
     Draw(RendererMode::LINES, model, cameraPos, &polygonVerts, color);
 }
 
-void Renderer::DrawAllUI() {
+void Renderer::DrawUI() {
     mSpriteVerts->SetActive();
 
-    for (auto ui : mUIComps) {
-        ui->Draw(mBaseShader);
-    }
+    UIManager::Instance().GetRootUI()->DrawTree(mBaseShader);
 }
 
 void Renderer::Present()

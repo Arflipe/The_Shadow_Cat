@@ -14,7 +14,7 @@ public:
     InputHandler& operator=(const InputHandler&) = delete;
 
     // Initialize with game reference
-    void Initialize(Game* game);
+    void Initialize();
     void Shutdown();
 
     // Main input processing

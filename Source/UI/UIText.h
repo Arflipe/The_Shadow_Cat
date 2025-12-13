@@ -3,12 +3,15 @@
 #include <string>
 #include <SDL.h>
 #include "../Math.h"
+#include "UIElement.h"
 #include "UIImage.h"
 
 class UIText : public UIImage {
 public:
-    UIText(class Game* game, const std::string& text, class Font* font, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f,
-           int pointSize = 40, const unsigned wrapLength = 1024, int drawOrder = 100);
+    UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, float scale = 1.0f, float angle = 0.0f,
+            int pointSize = 40, const unsigned wrapLength = 1024);
+    UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, Vector3 color, Vector4 backgroundColor, 
+            float scale = 1.0f, float angle = 0.0f, int pointSize = 40, const unsigned wrapLength = 1024);
 
     ~UIText();
 
