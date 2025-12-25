@@ -6,7 +6,7 @@
 #include "../Game.h"
 #include "../GameConstants.h"
 #include "../UIManager.h"
-#include "../UI/UIElement.h"
+#include "../UI/Primitives/UIElement.h"
 
 Renderer::Renderer(SDL_Window *window)
     : mBaseShader(nullptr),

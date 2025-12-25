@@ -23,8 +23,3 @@ void Component::ProcessInput(const Uint8 *keyState)
 void Component::DebugDraw(class Renderer *renderer)
 {
 }
-
-class Game *Component::GetGame() const
-{
-    return mOwner->GetGame();
-}

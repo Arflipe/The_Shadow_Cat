@@ -55,24 +55,24 @@ add_executable(${PROJECT_NAME}
         Source/AudioSystem.h
         Source/Renderer/Font.h
         Source/Renderer/Font.cpp
-        Source/UI/UIButton.cpp
-        Source/UI/UIButton.h
-        Source/UI/UIElement.cpp
-        Source/UI/UIElement.h
-        Source/UI/UIImage.cpp
-        Source/UI/UIImage.h
+        Source/UI/Primitives/UIButton.cpp
+        Source/UI/Primitives/UIButton.h
+        Source/UI/Primitives/UIElement.cpp
+        Source/UI/Primitives/UIElement.h
+        Source/UI/Primitives/UIImage.cpp
+        Source/UI/Primitives/UIImage.h
         Source/UI/Screens/UIScreen.cpp
         Source/UI/Screens/UIScreen.h
-        Source/UI/UIText.cpp
-        Source/UI/UIText.h
+        Source/UI/Primitives/UIText.cpp
+        Source/UI/Primitives/UIText.h
         Source/UI/Screens/HUD.cpp
         Source/UI/Screens/HUD.h
         Source/UI/Screens/TutorialHUD.cpp
         Source/UI/Screens/TutorialHUD.h
         Source/UI/Screens/UpgradeHUD.cpp
         Source/UI/Screens/UpgradeHUD.h
-        Source/UI/UIRect.cpp
-        Source/UI/UIRect.h
+        Source/UI/Primitives/UIRect.cpp
+        Source/UI/Primitives/UIRect.h
         Source/UI/Screens/MainMenu.cpp
         Source/UI/Screens/MainMenu.h
         Source/UI/Screens/GameOver.cpp
@@ -177,8 +177,20 @@ add_executable(${PROJECT_NAME}
         Source/UIManager.cpp
         Source/UIManager.h
         Source/Event.h
-        Source/UI/UIRoot.cpp
-        Source/UI/UIRoot.h
+        Source/UI/Primitives/UIRoot.cpp
+        Source/UI/Primitives/UIRoot.h
+        Source/UI/AbilityCard.cpp
+        Source/UI/AbilityCard.h
+        Source/UI/ShadowCatHP.cpp
+        Source/UI/ShadowCatHP.h
+        Source/UI/UIHeart.cpp
+        Source/UI/UIHeart.h
+        Source/UI/SkillBar.cpp
+        Source/UI/SkillBar.h
+        Source/UI/SkillIcon.cpp
+        Source/UI/SkillIcon.h
+        Source/UI/Screens/UIPause.cpp
+        Source/UI/Screens/UIPause.h
 )
 
 configure_local_linking(${PROJECT_NAME})

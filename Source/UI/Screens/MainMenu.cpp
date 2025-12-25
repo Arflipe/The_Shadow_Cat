@@ -1,4 +1,6 @@
 #include "MainMenu.h"
+
+#include "../AbilityCard.h"
 #include "../../Game.h"
 #include "../../GameConstants.h"
 #include "../../SceneManager.h"
@@ -10,22 +12,21 @@ MainMenu::MainMenu(UIElement& parent, const std::string& fontName)
 
     auto scroll = new UIImage(*this, "../Assets/HUD/Menu/Scroll2.png", Vector2(0.0f, 0.0f), 3.0f, 0.0f);
 
-    auto titleTextShadow = new UIText(*this, "The Shadow Cat", mFont, Vector2(4.0f, -236.0f), Vector3::Zero, Vector4::Zero, 1.2f, 0.0f, 60);
-    auto titleText = new UIText(*titleTextShadow, "The Shadow Cat", mFont, Vector2(0.0f, -240.0f), Vector3(0.9f, 0.0f, 0.9f), Vector4::Zero, 1.2f, 0.0f, 60);
+    auto titleTextShadow = new UIText(*this, "The Shadow Cat", mFont, Vector2(3.0f, -237.0f), Vector3(0.9f, 0.0f, 0.9f), Vector4::Zero, 1.2f, 0.0f, 60);
+    auto titleText = new UIText(*titleTextShadow, "The Shadow Cat", mFont, Vector2(-3.0f, -3.0f), Vector3::Zero, Vector4::Zero, 1.2f, 0.0f, 60);
 
     // Drop shadow on text
-    auto newAdventureTextShadow = new UIText(*scroll, "    New\nAdventure", mFont, Vector2(303.0f, -17.0f), Vector3(0.6f), Vector4::Zero, SCALE);
-    auto quitTextShadow = new UIText(*scroll, "Quit", mFont, Vector2(3.0f, 43.0f), Vector3(0.6f), Vector4::Zero, SCALE);
-
-    // Using lambda as on click functions
+    float wrapLength = 185.0f;
+    auto newAdventureTextShadow = new UIText(*scroll, "    New\nAdventure", mFont, Vector2(3.0f, -7.0f), Vector3(0.6f), Vector4::Zero, SCALE, 0.0f, 40, wrapLength);
+    auto quitTextShadow = new UIText(*scroll, "Quit", mFont, Vector2(3.0f, 12.0f), Vector3(0.6f), Vector4::Zero, SCALE);
 
     auto newAdventureButton = new UIButton(*newAdventureTextShadow, "    New\nAdventure",
         []() { SceneManager::Instance().SetScene(GameConstants::DEFAULT_STARTING_SCENE); },
-        mFont, Vector2(300.0f, -20.0f), SCALE);
+        mFont, Vector2(-3.0f, -3.0f), SCALE, 0.0f, 40, wrapLength);
 
     auto quitButton = new UIButton(*quitTextShadow, "Quit",
         [this]() { Game::Instance().Quit(); },
-        mFont, Vector2(0.0f, 40.0f), SCALE);
+        mFont, Vector2(-3.0f, -3.0f), SCALE);
 
     mButtons.push_back(newAdventureButton);
     mButtons.push_back(quitButton);
@@ -43,7 +44,7 @@ MainMenu::MainMenu(UIElement& parent, const std::string& fontName)
     auto versionText = "Version " + std::to_string(GameConstants::VERSION_MAJOR) + "." +
         std::to_string(GameConstants::VERSION_MINOR) + "." +
         std::to_string(GameConstants::VERSION_PATCH);
-    new UIText(*scroll, versionText, mFont, Vector2(540.0f, 328.0f), Vector3(0.8f), Vector4::Zero, 0.7f);
+    new UIText(*this, versionText, mFont, Vector2(540.0f, 328.0f), Vector3(0.8f), Vector4::Zero, 0.7f);
 
     SceneManager::Instance().OnSceneChanged.Subscribe([this](GameScene scene) { OnSceneChanged(scene); });
 }

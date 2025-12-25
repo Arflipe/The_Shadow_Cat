@@ -5,8 +5,8 @@
 #include "../GameConstants.h"
 #include "../LevelManager.h"
 
-UpgradeTreat::UpgradeTreat(class Game* game)
-	: Actor(game)
+UpgradeTreat::UpgradeTreat()
+	: Actor()
 	, mCollected(true)
 {
 	CollisionFilter filter;

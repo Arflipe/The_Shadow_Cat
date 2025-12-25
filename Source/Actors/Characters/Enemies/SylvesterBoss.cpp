@@ -11,8 +11,8 @@
 #include "../../../Random.h"
 #include "../../../Components/Physics/Collider.h"
 
-SylvesterBoss::SylvesterBoss(class Game* game, Vector2 position, float forwardSpeed)
-	: BossBase(game, position, forwardSpeed)
+SylvesterBoss::SylvesterBoss(Vector2 position, float forwardSpeed)
+	: BossBase(position, forwardSpeed)
 	, mFootstepTimer(0.0f)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "SylvesterBossAnim", GameConstants::TILE_SIZE * 2.0f, GameConstants::TILE_SIZE * 2.0f);
@@ -60,7 +60,7 @@ void SylvesterBoss::OnUpdate(float deltaTime)
 			std::string sound2 = "e11_boss_step_on_grass2.wav";
 
 			// Play random one of the two sounds
-			GetGame()->GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 1.0f);
+			Game::Instance().GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 1.0f);
 		}
 	}
 	else

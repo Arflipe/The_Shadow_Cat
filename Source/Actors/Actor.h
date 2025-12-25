@@ -14,7 +14,7 @@ enum class ActorState
 class Actor
 {
 public:
-    Actor(class Game *game);
+    Actor();
     virtual ~Actor();
 
     // Update function called from Game (not overridable)
@@ -40,9 +40,6 @@ public:
     // State getter/setter
     ActorState GetState() const { return mState; }
     void SetState(ActorState state) { mState = state; }
-
-    // Game getter
-    class Game *GetGame() { return mGame; }
 
     // Components getter
     const std::vector<class Component *> &GetComponents() const { return mComponents; }
@@ -70,8 +67,6 @@ public:
     virtual void Kill();
 
 protected:
-    class Game *mGame;
-
     // Any actor-specific update code (overridable)
     virtual void OnUpdate(float deltaTime);
     // Any actor-specific update code (overridable)

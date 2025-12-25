@@ -36,7 +36,7 @@ nlohmann::json WhiteBubble::LoadSkillDataFromJSON(const std::string& fileName)
 void WhiteBubble::Execute()
 {
 	// Play bubble sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.5f);
+	Game::Instance().GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.5f);
 
 	// Spawn bubble at target position (where boss is aiming)
 	// mTargetVector contains the target position after StartSkill
@@ -76,8 +76,8 @@ bool WhiteBubble::EnemyShouldUse()
 	return distanceToPlayer <= mRange;
 }
 
-WhiteBubbleActor::WhiteBubbleActor(class Game* game)
-	: Actor(game)
+WhiteBubbleActor::WhiteBubbleActor()
+	: Actor()
 	, mDamageCooldown(0.5f) // Damage every 0.5 seconds
 	, mLastDamageTime(0.0f)
 {
@@ -109,7 +109,7 @@ void WhiteBubbleActor::OnUpdate(float deltaTime)
 		ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
 		if (colliderComp && colliderComp->GetCollider())
 		{
-			auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+			auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 			for (auto collider : hitColliders)
 			{
 				auto actor = collider->GetOwner();

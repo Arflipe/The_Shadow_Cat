@@ -16,8 +16,7 @@ SceneManager& SceneManager::Instance()
 }
 
 SceneManager::SceneManager()
-    : mGame(nullptr),
-      mCurrentScene(GameScene::MainMenu)
+    : mCurrentScene(GameScene::MainMenu)
 {
 }
 
@@ -26,20 +25,18 @@ SceneManager::~SceneManager()
     Shutdown();
 }
 
-void SceneManager::Initialize(Game* game)
+void SceneManager::Initialize()
 {
-    mGame = game;
     mCurrentScene = GameScene::MainMenu;
 }
 
 void SceneManager::Shutdown()
 {
-    if (mBackgroundMusic.IsValid() && mGame)
+    if (mBackgroundMusic.IsValid())
     {
         Game::Instance().GetAudio()->StopSound(mBackgroundMusic);
         mBackgroundMusic.Reset();
     }
-    mGame = nullptr;
 }
 
 void SceneManager::SetScene(GameScene nextScene)

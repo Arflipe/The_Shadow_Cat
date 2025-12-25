@@ -37,7 +37,7 @@ void WhiteBomb::Execute()
 	float lifetime = mRange / mProjectileSpeed;
 
 	// Play bomb sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
 
 	LevelManager::Instance().GetWhiteBombActor()->Awake(
 		mCharacter->GetPosition() + mTargetVector * 20.0f,
@@ -78,8 +78,8 @@ bool WhiteBomb::EnemyShouldUse()
 	return distanceToPlayer <= mRange;
 }
 
-WhiteBombActor::WhiteBombActor(class Game* game)
-	: Actor(game)
+WhiteBombActor::WhiteBombActor()
+	: Actor()
 {
 	mAnimatorComponent = new AnimatorComponent(this, "WhiteBombAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 	CollisionFilter filter;
@@ -134,7 +134,7 @@ void WhiteBombActor::OnUpdate(float deltaTime)
 
 	// Check for collisions
 	ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
-	auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+	auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 	for (auto collider : hitColliders)
 	{
 		auto enemyActor = collider->GetOwner();

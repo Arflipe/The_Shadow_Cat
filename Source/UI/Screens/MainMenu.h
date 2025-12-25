@@ -9,6 +9,5 @@ public:
     MainMenu(UIElement& parent, const std::string& fontName);
 
     void OnActiveKeyPress(int key) override;
-
     void OnSceneChanged(GameScene scene);
 };

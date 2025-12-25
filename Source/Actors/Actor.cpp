@@ -5,8 +5,8 @@
 
 #include "../LevelManager.h"
 
-Actor::Actor(Game *game)
-    : mState(ActorState::Active), mPosition(Vector2::Zero), mScale(Vector2(1.0f, 1.0f)), mRotation(0.0f), mGame(game), mPersistent(false)
+Actor::Actor()
+    : mState(ActorState::Active), mPosition(Vector2::Zero), mScale(Vector2(1.0f, 1.0f)), mRotation(0.0f), mPersistent(false)
 {
     LevelManager::Instance().AddActor(this);
 }

@@ -6,8 +6,8 @@
 #include "../../GameConstants.h"
 #include "../../LevelManager.h"
 
-Character::Character(class Game *game, Vector2 position, float forwardSpeed)
-    : Actor(game)
+Character::Character(Vector2 position, float forwardSpeed)
+    : Actor()
     , mIsAnimationLocked(false)
     , mIsMovementLocked(false)
     , mForwardSpeed(forwardSpeed)
@@ -26,8 +26,8 @@ Character::Character(class Game *game, Vector2 position, float forwardSpeed)
     maxHp = hp;
 }
 
-Character::Character(class Game *game, float forwardSpeed)
-    : Actor(game)
+Character::Character(float forwardSpeed)
+    : Actor()
     , mIsAnimationLocked(false)
     , mIsMovementLocked(false)
     , mForwardSpeed(forwardSpeed)

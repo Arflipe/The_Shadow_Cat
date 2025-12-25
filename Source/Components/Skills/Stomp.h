@@ -27,7 +27,7 @@ private:
 class StompActor : public Actor
 {
 public:
-	StompActor(class Game* game);
+	StompActor();
 	~StompActor();
 
 	void OnUpdate(float deltaTime) override;

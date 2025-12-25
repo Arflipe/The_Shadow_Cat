@@ -3,8 +3,8 @@
 #include "../Game.h"
 #include "../Components/ParticleSystemComponent.h"
 
-DebugActor::DebugActor(Game* game)
-    : Actor(game)
+DebugActor::DebugActor()
+    : Actor()
 {
     mParticleSystem = new ParticleSystemComponent(this, 3, 3, 100, 10, false);
 }

@@ -23,7 +23,7 @@ public:
         Dead        // Death animation playing
     };
 
-    Boss(class Game* game, Vector2 arenaCenter, BossType type = BossType::WhiteBoss, 
+    Boss(Vector2 arenaCenter, BossType type = BossType::WhiteBoss, 
          bool playSpawnAnimation = false);
     virtual ~Boss();
 

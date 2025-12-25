@@ -5,8 +5,8 @@
 #include "Drawing/RectComponent.h"
 #include "Physics/Collider.h"
 
-Particle::Particle(class Game *game, int width, int height, bool hasCollider)
-    : Actor(game), mDrawComponent(nullptr), mRigidBodyComponent(nullptr), mColliderComponent(nullptr), mIsDead(true), mLifeTime(1.0f)
+Particle::Particle(int width, int height, bool hasCollider)
+    : Actor(), mDrawComponent(nullptr), mRigidBodyComponent(nullptr), mColliderComponent(nullptr), mIsDead(true), mLifeTime(1.0f)
 {
     mDrawComponent = new RectComponent(this, width, height, RendererMode::TRIANGLES);
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f, true);
@@ -65,7 +65,7 @@ ParticleSystemComponent::ParticleSystemComponent(class Actor *owner, int particl
     // Create a pool of particles
     for (int i = 0; i < poolSize; i++)
     {
-        auto *p = new Particle(owner->GetGame(), particleW, particleH, hasCollider);
+        auto *p = new Particle(particleW, particleH, hasCollider);
         mParticles.push_back(p);
     }
 }

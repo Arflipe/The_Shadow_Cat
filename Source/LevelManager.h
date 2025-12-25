@@ -29,8 +29,8 @@ public:
     // Singleton access
     static LevelManager& Instance();
     
-    // Initialize with game reference
-    void Initialize(Game* game);
+    // Initialize and shutdown
+    void Initialize();
     void Shutdown();
 
     // Delete copy constructor and assignment operator
@@ -106,8 +106,6 @@ private:
     void UpdateActors(float deltaTime);
     void UpdatePortalActivation();
     bool CheckLevelTransition(const Vector2& playerPos, GameScene& outNextScene);
-
-    Game* mGame;
 
     // Level data
     int** mLevelData;

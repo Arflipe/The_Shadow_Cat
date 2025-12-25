@@ -1,6 +1,7 @@
 #include "UIManager.h"
 #include "UI/Screens/MainMenu.h"
-#include "UI/UIElement.h"
+#include "UI/Primitives/UIElement.h"
+#include "UI/Screens/UIPause.h"
 #include "UI/Screens/UIScreen.h"
 #include "UI/Screens/HUD.h"
 #include "UI/Screens/TutorialHUD.h"
@@ -8,7 +9,8 @@
 #include "UI/Screens/GameOver.h"
 #include "UI/Screens/WinScreen.h"
 #include "Game.h"
-#include "UI/UIRoot.h"
+#include "UI/Primitives/UIRoot.h"
+#include "UI/Screens/UIPause.h"
 
 UIManager::UIManager()
     :mRootUI(nullptr)
@@ -32,11 +34,12 @@ void UIManager::Initialize()
 {
     mRootUI = new UIRoot();
     new HUD(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
-    new UpgradeHUD(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
     new TutorialHUD(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
 	new GameOver(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
 	new WinScreen(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
 	new MainMenu(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
+    new UpgradeHUD(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
+    new UIPause(*mRootUI, "../Assets/Fonts/Pixellari.ttf");
 }
 
 void UIManager::Shutdown()

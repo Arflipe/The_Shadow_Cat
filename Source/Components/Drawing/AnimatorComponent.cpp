@@ -17,7 +17,7 @@ AnimatorComponent::AnimatorComponent(class Actor *owner, const std::string &anim
 {
 	bool loaded = LoadAnimationData(animationName);
 	if (!loaded)
-		mSpriteTexture = mOwner->GetGame()->GetRenderer()->GetTexture("../Assets/Sprites/NoTexture/NoTexture.png");
+		mSpriteTexture = Game::Instance().GetRenderer()->GetTexture("../Assets/Sprites/NoTexture/NoTexture.png");
 }
 
 bool AnimatorComponent::LoadAnimationData(const std::string &animationName)
@@ -44,7 +44,7 @@ bool AnimatorComponent::LoadAnimationData(const std::string &animationName)
 		return false;
 	}
 
-	mSpriteTexture = mOwner->GetGame()->GetRenderer()->GetTexture(texturePath);
+	mSpriteTexture = Game::Instance().GetRenderer()->GetTexture(texturePath);
 
 	std::string spriteSheetDataPath = animData["spriteSheetData"].get<std::string>();
 	if (spriteSheetDataPath.empty())

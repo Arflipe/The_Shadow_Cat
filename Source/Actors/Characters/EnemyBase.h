@@ -8,7 +8,7 @@
 class EnemyBase : public Character
 {
 public:
-	EnemyBase(class Game* game, Vector2 position, float forwardSpeed);
+	EnemyBase(Vector2 position, float forwardSpeed);
 	virtual ~EnemyBase();
 
 	void OnUpdate(float deltaTime) override;

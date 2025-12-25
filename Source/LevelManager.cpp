@@ -38,8 +38,7 @@ LevelManager& LevelManager::Instance()
 }
 
 LevelManager::LevelManager()
-    : mGame(nullptr),
-      mLevelData(nullptr),
+    : mLevelData(nullptr),
       mLevelWidth(0),
       mLevelHeight(0),
       mCurrentScene(GameScene::MainMenu),
@@ -60,15 +59,13 @@ LevelManager::~LevelManager()
     Shutdown();
 }
 
-void LevelManager::Initialize(Game* game)
+void LevelManager::Initialize()
 {
-    mGame = game;
 }
 
 void LevelManager::Shutdown()
 {
     UnloadLevel();
-    mGame = nullptr;
 }
 
 void LevelManager::LoadAndBuildLevel(GameScene scene)
@@ -76,15 +73,15 @@ void LevelManager::LoadAndBuildLevel(GameScene scene)
     mCurrentScene = scene;
 
     // Create core actors
-    mCollisionQueryActor = new Actor(mGame);
+    mCollisionQueryActor = new Actor();
     new ColliderComponent(mCollisionQueryActor, 0, 0, nullptr, CollisionFilter());
 
-    mDebugActor = new DebugActor(mGame);
+    mDebugActor = new DebugActor();
 
-    mAttackTrailActor = new Actor(mGame);
+    mAttackTrailActor = new Actor();
     new AnimatedParticleSystemComponent(mAttackTrailActor, "AttackTrailAnim", false);
 
-    mWhiteSlashActor = new Actor(mGame);
+    mWhiteSlashActor = new Actor();
     new AnimatedParticleSystemComponent(mWhiteSlashActor, "WhiteSlashAnim", false);
 
     // Load level file
@@ -156,6 +153,8 @@ void LevelManager::ProcessInput(const Uint8* keyState)
 
 void LevelManager::Update(float deltaTime)
 {
+    if (Game::Instance().IsPaused()) return;
+
     UpdateActors(deltaTime);
     UpdateCamera(deltaTime);
     UpdatePortalActivation();
@@ -291,7 +290,7 @@ bool LevelManager::CheckLevelTransition(const Vector2& playerPos, GameScene& out
             outNextScene = GameScene::Level3_Boss;
             return true;
         case GameScene::Level3_Boss:
-            Game::Instance().SetGameWon(true);
+            Game::Instance().SetGameWon();
             return false;
         default:
             return false;
@@ -418,7 +417,7 @@ StompActor* LevelManager::GetStompActor()
         if (actor->IsDead())
             return actor;
 
-    StompActor* stomp = new StompActor(mGame);
+    StompActor* stomp = new StompActor();
     mStompActors.push_back(stomp);
     return stomp;
 }
@@ -429,7 +428,7 @@ FurBallActor* LevelManager::GetFurBallActor()
         if (actor->IsDead())
             return actor;
 
-    FurBallActor* furball = new FurBallActor(mGame);
+    FurBallActor* furball = new FurBallActor();
     mFurBallActors.push_back(furball);
     return furball;
 }
@@ -440,7 +439,7 @@ WhiteBombActor* LevelManager::GetWhiteBombActor()
         if (actor->IsDead())
             return actor;
 
-    WhiteBombActor* bomb = new WhiteBombActor(mGame);
+    WhiteBombActor* bomb = new WhiteBombActor();
     mWhiteBombActors.push_back(bomb);
     return bomb;
 }
@@ -451,7 +450,7 @@ WhiteBubbleActor* LevelManager::GetWhiteBubbleActor()
         if (actor->IsDead())
             return actor;
 
-    WhiteBubbleActor* bubble = new WhiteBubbleActor(mGame);
+    WhiteBubbleActor* bubble = new WhiteBubbleActor();
     mWhiteBubbleActors.push_back(bubble);
     return bubble;
 }
@@ -462,7 +461,7 @@ UpgradeTreat* LevelManager::GetUpgradeTreatActor()
         if (actor->IsCollected())
             return actor;
 
-    UpgradeTreat* treat = new UpgradeTreat(mGame);
+    UpgradeTreat* treat = new UpgradeTreat();
     mUpgradeTreatActors.push_back(treat);
     return treat;
 }
@@ -580,7 +579,7 @@ void LevelManager::BuildLevel(int** levelData, int width, int height)
     float portalX = (centerColumn * GameConstants::TILE_SIZE) + (GameConstants::TILE_SIZE / 2.0f);
     float portalY = (lastRow * GameConstants::TILE_SIZE) + (GameConstants::TILE_SIZE / 2.0f);
 
-    mLevelPortal = new LevelPortal(mGame);
+    mLevelPortal = new LevelPortal();
     mLevelPortal->SetPosition(Vector2(portalX, portalY));
 
     if (Game::Instance().IsDebugging())
@@ -595,21 +594,21 @@ void LevelManager::SpawnActorByTileID(int tileID, const Vector2& position)
     if (tileID == 0)
     {
         if (!mShadowCat)
-            mShadowCat = new ShadowCat(mGame, position);
+            mShadowCat = new ShadowCat(position);
         else
             mShadowCat->SetPosition(position);
     }
     else if (tileID == 1)
     {
-        new WhiteCat(mGame, position);
+        new WhiteCat(position);
     }
     else if (tileID == 2)
     {
-        new OrangeCat(mGame, position);
+        new OrangeCat(position);
     }
     else if (tileID == 3)
     {
-        new SylvesterCat(mGame, position);
+        new SylvesterCat(position);
     }
     else if (tileID >= 4 && tileID <= 10)
     {
@@ -619,29 +618,29 @@ void LevelManager::SpawnActorByTileID(int tileID, const Vector2& position)
         }
         else
         {
-            Block* block = new Block(mGame, tileID);
+            Block* block = new Block(tileID);
             block->SetPosition(position);
         }
     }
     else if (tileID == 11)
     {
-        new Dummy(mGame, position);
+        new Dummy(position);
     }
     else if (tileID >= 16 && tileID <= 27)
     {
-        Block* block = new Block(mGame, tileID);
+        Block* block = new Block(tileID);
         block->SetPosition(position);
     }
     else if (tileID == 12)
     {
-        new WhiteBoss(mGame, position);
+        new WhiteBoss(position);
     }
     else if (tileID == 13)
     {
-        new OrangeBoss(mGame, position);
+        new OrangeBoss(position);
     }
     else if (tileID == 14)
     {
-        new SylvesterBoss(mGame, position);
+        new SylvesterBoss(position);
     }
 }

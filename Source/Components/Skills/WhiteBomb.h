@@ -31,7 +31,7 @@ private:
 class WhiteBombActor : public Actor
 {
 public:
-	WhiteBombActor(class Game* game);
+	WhiteBombActor();
 	~WhiteBombActor();
 
 	void OnUpdate(float deltaTime) override;

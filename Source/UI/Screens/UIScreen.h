@@ -14,10 +14,10 @@
 #include <list>
 
 #include "../../Math.h"
-#include "../UIText.h"
-#include "../UIButton.h"
-#include "../UIImage.h"
-#include "../UIRect.h"
+#include "../Primitives/UIText.h"
+#include "../Primitives/UIButton.h"
+#include "../Primitives/UIImage.h"
+#include "../Primitives/UIRect.h"
 
 class UIScreen : public UIElement
 {
@@ -35,9 +35,6 @@ public:
 
     void SetIsVisible(bool isVisible) override;
 
-    // Game getter
-    class Game* GetGame() { return mGame; }
-
     // Add a button to this screen
     UIButton* AddButton(const std::string& name, std::function<void()> onClick, const Vector2& offset, float scale = 1.0f, float angle = 0.0f, const int pointSize = 40, const int unsigned wrapLength = 1024, int drawOrder = 100);
     UIText* AddText(const std::string& name, const Vector2& offset, float scale = 1.0f, float angle = 0.0f, const int pointSize = 40, const int unsigned wrapLength = 1024, int drawOrder = 100);
@@ -46,7 +43,6 @@ public:
 
 protected:
     // Sets the mouse mode to relative or not
-    class Game* mGame;
     class Font* mFont;
 
     // Configure positions

@@ -7,9 +7,9 @@
 
 #include "../LevelManager.h"
 
-void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss)
 {
-    if (!game->IsDebugging()) return;
+    if (!Game::Instance().IsDebugging()) return;
     
     Vector2 position = boss->GetPosition();
     Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
@@ -27,19 +27,19 @@ void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
     switch (boss->GetCurrentState())
     {
         case Boss::BossState::Spawning:
-            DrawSpawningState(renderer, boss, game);
+            DrawSpawningState(renderer, boss);
             break;
             
         case Boss::BossState::Idle:
-            DrawIdleState(renderer, boss, game);
+            DrawIdleState(renderer, boss);
             break;
             
         case Boss::BossState::Combat:
-            DrawCombatState(renderer, boss, game);
+            DrawCombatState(renderer, boss);
             break;
             
         case Boss::BossState::Attacking:
-            DrawAttackingState(renderer, boss, game);
+            DrawAttackingState(renderer, boss);
             break;
             
         case Boss::BossState::Dead:
@@ -59,7 +59,7 @@ void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
     }
 }
 
-void BossDebugDrawer::DrawSpawningState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawSpawningState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
@@ -69,7 +69,7 @@ void BossDebugDrawer::DrawSpawningState(Renderer* renderer, const Boss* boss, Ga
     DrawCircle(renderer, position, 100.0f, spawnColor, cameraPos, 16);
 }
 
-void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();
@@ -82,7 +82,7 @@ void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss, Game* 
     DrawArenaRadius(renderer, arenaCenter, 300.0f, cameraPos);
 }
 
-void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();
@@ -98,7 +98,7 @@ void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss, Game
     DrawArenaRadius(renderer, arenaCenter, 300.0f, cameraPos);
 }
 
-void BossDebugDrawer::DrawAttackingState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawAttackingState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();

@@ -6,7 +6,7 @@
 #include "Math.h"
 #include "SceneManager.h"
 #include "Event.h"
-#include "UI/UIElement.h"
+#include "UI/Primitives/UIElement.h"
 
 class Game
 {
@@ -17,6 +17,8 @@ public:
     Game& operator=(const Game&) = delete;
 
     Event<bool> OnPauseChanged;
+    Event<> OnGameOver;
+    Event<> OnGameWon;
 
     bool Initialize();
     void RunLoop();
@@ -27,8 +29,9 @@ public:
     void SetPaused(bool paused);
     bool IsPaused() const { return mIsPaused; }
     void ResetGame();
-    void SetGameOver(bool isOver) { mIsGameOver = isOver; }
-    void SetGameWon(bool isWon) { mIsGameWon = isWon; }
+    void BackToMenu();
+    void SetGameOver();
+    void SetGameWon();
 
     // System Access
     class Renderer* GetRenderer() { return mRenderer; }
@@ -39,6 +42,7 @@ public:
     bool IsDebugging() const { return mIsDebugging; }
     void SetDebugging(bool debug) { mIsDebugging = debug; }
     bool IsGodMode() const { return mIsGodMode; }
+    void SetGodMode(bool godmode) { mIsGodMode = godmode; }
 
     // Fullscreen
     bool IsFullscreen() const { return mIsFullscreen; }

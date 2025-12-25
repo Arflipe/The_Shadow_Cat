@@ -2,7 +2,7 @@
 
 #include <string>
 #include <SDL.h>
-#include "../Math.h"
+#include "../../Math.h"
 #include "UIElement.h"
 #include "UIImage.h"
 

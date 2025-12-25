@@ -20,7 +20,6 @@ public:
 
     int GetUpdateOrder() const { return mUpdateOrder; }
     class Actor *GetOwner() const { return mOwner; }
-    class Game *GetGame() const;
 
     void SetEnabled(const bool enabled) { mIsEnabled = enabled; };
     bool IsEnabled() const { return mIsEnabled; };

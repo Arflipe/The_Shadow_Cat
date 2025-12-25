@@ -61,8 +61,8 @@ bool Game::Initialize()
     mAudio->CacheAllSounds();
     
     InputHandler::Instance().Initialize();
-    LevelManager::Instance().Initialize(this);
-    SceneManager::Instance().Initialize(this);
+    LevelManager::Instance().Initialize();
+    SceneManager::Instance().Initialize();
     GameRenderer::Instance().Initialize();
     UIManager::Instance().Initialize();
 
@@ -95,31 +95,6 @@ void Game::RunLoop()
 
 void Game::UpdateGame(float deltaTime)
 {
-    // End condition check
-    if (mIsGameOver || mIsGameWon)
-    {
-        SetPaused(true);
-
-        bool screenExists = false;
-        auto& uiStack = UIManager::Instance().GetUIStack();
-        for (auto screen : uiStack)
-        {
-            if (dynamic_cast<GameOver*>(screen) != nullptr || dynamic_cast<WinScreen*>(screen) != nullptr)
-            {
-                screenExists = true;
-                break;
-            }
-        }
-
-        if (!screenExists)
-        {
-            if (mIsGameOver)
-                new GameOver(*UIManager::Instance().GetRootUI(), "../Assets/Fonts/Pixellari.ttf");
-            else
-                new WinScreen(*UIManager::Instance().GetRootUI(), "../Assets/Fonts/Pixellari.ttf");
-        }
-    }
-
     // Update level (actors, camera, portal, transitions)
     LevelManager::Instance().Update(deltaTime);
 
@@ -144,13 +119,27 @@ void Game::ResetGame()
 {
     mAudio->StopAllSounds();
 
-    SetGameOver(false);
-    SetGameWon(false);
-    SceneManager::Instance().SetScene(GameScene::Level1);
-
-    LevelManager::Instance().GetPlayer()->SetHP(LevelManager::Instance().GetPlayer()->GetMaxHP());
-
+    mIsGameOver = false;
+    mIsGameWon = false;
+    
     SetPaused(false);
+    
+    SceneManager::Instance().SetScene(GameScene::Level1);
+    
+    if (LevelManager::Instance().GetPlayer())
+        LevelManager::Instance().GetPlayer()->SetHP(LevelManager::Instance().GetPlayer()->GetMaxHP());
+}
+
+void Game::BackToMenu()
+{
+    mAudio->StopAllSounds();
+
+    mIsGameOver = false;
+    mIsGameWon = false;
+    
+    SetPaused(false);
+    
+    SceneManager::Instance().SetScene(GameScene::MainMenu);
 }
 
 Vector2 Game::GetMouseWorldPosition()
@@ -198,4 +187,18 @@ void Game::Shutdown()
 
     SDL_DestroyWindow(mWindow);
     SDL_Quit();
+}
+
+void Game::SetGameOver()
+{
+    SetPaused(true);
+    mIsGameOver = true;
+    OnGameOver.Invoke();
+}
+
+void Game::SetGameWon()
+{
+    SetPaused(true);
+    mIsGameWon = true;
+    OnGameWon.Invoke();
 }

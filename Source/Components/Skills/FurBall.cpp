@@ -42,7 +42,7 @@ void FurBall::Execute()
 	float lifetime = mRange / mProjectileSpeed;
 
 	// Play furball sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
 
 	LevelManager::Instance().GetFurBallActor()->Awake(
 		mCharacter->GetPosition() + mTargetVector * 20.0f,
@@ -73,8 +73,8 @@ void FurBall::EndSkill()
 	mCharacter->SetMovementLock(false);
 }
 
-FurBallActor::FurBallActor(class Game* game)
-	: Actor(game)
+FurBallActor::FurBallActor()
+	: Actor()
 {
 	mAnimatorComponent = new AnimatorComponent(this, "FurBallAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 	CollisionFilter filter;
@@ -96,7 +96,7 @@ void FurBallActor::OnUpdate(float deltaTime)
 
 	// Check for collisions
 	ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
-	auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+	auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 	for (auto collider : hitColliders)
 	{
 		auto enemyActor = collider->GetOwner();

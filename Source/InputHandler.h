@@ -34,8 +34,8 @@ private:
     void HandleKeyPress(SDL_Keycode key, Uint8 repeat);
     void HandleMouseButton();
 
-    // Game reference
-    Game* mGame;
+    // Debug key handling
+    void HandleDebugKeys(SDL_Keycode key, Uint8 repeat);
 
     // Controller
     SDL_GameController* mController;

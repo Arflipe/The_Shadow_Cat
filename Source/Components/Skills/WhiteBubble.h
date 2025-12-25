@@ -31,7 +31,7 @@ private:
 class WhiteBubbleActor : public Actor
 {
 public:
-	WhiteBubbleActor(class Game* game);
+	WhiteBubbleActor();
 	~WhiteBubbleActor();
 
 	void OnUpdate(float deltaTime) override;

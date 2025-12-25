@@ -7,8 +7,8 @@
 #include "../../../LevelManager.h"
 #include "../../../Components/Skills/FurBall.h"
 
-OrangeCat::OrangeCat(Game* game, Vector2 position)
-	: EnemyBase(game, position, 150.0f)
+OrangeCat::OrangeCat(Vector2 position)
+	: EnemyBase(position, 150.0f)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "OrangeCatAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 

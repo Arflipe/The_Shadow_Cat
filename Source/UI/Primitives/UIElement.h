@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Math.h"
-#include "../Renderer/Shader.h"
+#include "../../Math.h"
+#include "../../Renderer/Shader.h"
 #include <vector>
 
 class UIElement {
@@ -30,16 +30,18 @@ public:
     
     void DrawTree(class Shader* shader);
     virtual void Draw(class Shader* shader) { };
-    
+
     virtual void SetIsVisible(bool isVisible) { mIsVisible = isVisible; }
     bool IsVisible() const { return mIsVisible; }
-
+    
 protected:
+    void ResolvePosition();
+
     UIElement* mParent = nullptr;
     std::vector<UIElement*> mChildren;
 
     Vector2 mOffset;
-    Vector2 mAbsolutePos = Vector2(-1.0f, -1.0f); // ignore if negative
+    Vector2 mAbsolutePos = Vector2(0.0f, 0.0f);
     float mScale;
     float mAngle;
 

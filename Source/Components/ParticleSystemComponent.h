@@ -7,7 +7,7 @@
 class Particle : public Actor
 {
 public:
-    Particle(class Game *game, int width, int height, bool hasCollider);
+    Particle(int width, int height, bool hasCollider);
 
     void OnUpdate(float deltaTime) override;
 

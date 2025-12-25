@@ -58,7 +58,7 @@ void BasicAttack::StartSkill(Vector2 targetPosition)
         // Regular enemies and player use basic attack sounds
         sound = rand() % 2 ? "s01_basic_attack1.wav" : "s02_basic_attack2.wav";
     }
-    mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.5f);
+    Game::Instance().GetAudio()->PlaySound(sound, false, 0.5f);
 }
 
 void BasicAttack::Execute()
@@ -86,11 +86,11 @@ void BasicAttack::Execute()
         enemyCharacter->TakeDamage(mDamage);
     }
 
-    if (mCharacter->GetGame()->IsDebugging())
+    if (Game::Instance().IsDebugging())
 	{
 		auto vertices = ((PolygonCollider*)mAreaOfEffect)->GetVertices();
 		for (auto& v : vertices) v += pos;
-		Physics::DebugDrawPolygon(mCharacter->GetGame(), vertices, 0.5f, 15);
+		Physics::DebugDrawPolygon(vertices, 0.5f, 15);
 	}
 }
 

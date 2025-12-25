@@ -26,7 +26,7 @@ namespace GameConstants
 
     constexpr int UPGRADE_COUNT = 5;
 
-    constexpr GameScene DEFAULT_STARTING_SCENE = GameScene::Lobby;
+    constexpr GameScene DEFAULT_STARTING_SCENE = GameScene::Level3_Boss;
 
     constexpr int VERSION_MAJOR = 1;
     constexpr int VERSION_MINOR = 0;

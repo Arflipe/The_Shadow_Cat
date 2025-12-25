@@ -18,8 +18,8 @@ namespace {
     constexpr int BOSS_BASE_HP = 300;
 }
 
-Boss::Boss(class Game* game, Vector2 arenaCenter, BossType type, bool playSpawnAnimation)
-    : Character(game, 0.0f)  // Bosses don't use forward speed
+Boss::Boss(Vector2 arenaCenter, BossType type, bool playSpawnAnimation)
+    : Character(0.0f)  // Bosses don't use forward speed
     , mDeathTimer(0.0f)
     , mSpawnTimer(0.0f)
     , mBossType(type)
@@ -92,7 +92,7 @@ Boss::Boss(class Game* game, Vector2 arenaCenter, BossType type, bool playSpawnA
 Boss::~Boss()
 {
     // Unregister from Game
-    // GetGame()->UnregisterBoss(this);
+    // Game::Instance().UnregisterBoss(this);
 }
 
 void Boss::OnUpdate(float deltaTime)
@@ -352,5 +352,5 @@ void Boss::UpdateAttacking(float deltaTime)
 
 void Boss::OnDebugDraw(class Renderer* renderer)
 {
-    BossDebugDrawer::Draw(renderer, this, mGame);
+    BossDebugDrawer::Draw(renderer, this);
 }

@@ -43,7 +43,7 @@ void Stomp::StartSkill(Vector2 targetPosition)
 
 	// Play stomp sound
 	std::string sound = rand() % 2 ? "s03_stomp_attack1.wav" : "s04_stomp_attack2.wav";
-	mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound(sound, false, 0.7f);
 
 	LevelManager::Instance().GetStompActor()->Awake(
 		targetPosition,
@@ -54,8 +54,8 @@ void Stomp::StartSkill(Vector2 targetPosition)
 	);
 }
 
-StompActor::StompActor(class Game* game)
-	: Actor(game)
+StompActor::StompActor()
+	: Actor()
 	, mDamage(0)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "StompAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
@@ -89,7 +89,7 @@ void StompActor::Execute()
 	ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
 	Vector2 position = GetPosition();
 
-	auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+	auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 	for (auto collider : hitColliders)
 	{
 		auto enemyActor = collider->GetOwner();

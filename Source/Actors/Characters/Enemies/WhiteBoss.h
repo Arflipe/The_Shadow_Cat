@@ -5,7 +5,7 @@
 class WhiteBoss : public BossBase
 {
 public:
-	WhiteBoss(class Game *game, Vector2 position, float forwardSpeed = 120.0f);
+	WhiteBoss(Vector2 position, float forwardSpeed = 120.0f);
 
 	void OnUpdate(float deltaTime) override;
 

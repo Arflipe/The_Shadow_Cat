@@ -9,14 +9,14 @@ class BossDebugDrawer
 {
 public:
     // Main entry point for drawing all boss debug visualization
-    static void Draw(Renderer* renderer, const Boss* boss, Game* game);
+    static void Draw(Renderer* renderer, const Boss* boss);
 
 private:
     // State-specific visualization methods
-    static void DrawSpawningState(Renderer* renderer, const Boss* boss, Game* game);
-    static void DrawIdleState(Renderer* renderer, const Boss* boss, Game* game);
-    static void DrawCombatState(Renderer* renderer, const Boss* boss, Game* game);
-    static void DrawAttackingState(Renderer* renderer, const Boss* boss, Game* game);
+    static void DrawSpawningState(Renderer* renderer, const Boss* boss);
+    static void DrawIdleState(Renderer* renderer, const Boss* boss);
+    static void DrawCombatState(Renderer* renderer, const Boss* boss);
+    static void DrawAttackingState(Renderer* renderer, const Boss* boss);
     
     // Shared drawing primitives
     static void DrawCircle(Renderer* renderer, const Vector2& position, float radius, 

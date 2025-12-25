@@ -5,51 +5,23 @@
 GameOver::GameOver(UIElement& parent, const std::string& fontName)
     :UIScreen(parent, fontName)
 {
-    const float SCALE = 0.7f;
+    mBackgroundImage = new UIImage(*this, Vector2::Zero, 1.0f, 0.0f);
+    mGameOverText = new UIText(*mBackgroundImage, "GAME OVER :(", mFont, Vector2(0.0f, -150.0f), 2.0f, 0.0f);
+    mTryAgainButton = new UIButton(*mBackgroundImage, "TRY AGAIN",
+        []() { Game::Instance().ResetGame(); }, mFont,
+        Vector2(0.0f, +100.0f), 0.7f);
+    mBackToMenuButton = new UIButton(*mBackgroundImage, "BACK TO MENU",
+        []() { Game::Instance().BackToMenu(); }, mFont,
+        Vector2(0.0f, +170.0f), 0.7f);
+    mExitButton = new UIButton(*mBackgroundImage, "EXIT",
+        []() { Game::Instance().Quit(); }, mFont,
+        Vector2(0.0f, +240.0f), 0.7f);
 
-    // Stop all sounds and play game over music
-    Game::Instance().GetAudio()->StopAllSounds();
-    Game::Instance().GetAudio()->PlaySound("m03_game_over.mp3", true, 0.5f);
+    mButtons.push_back(mTryAgainButton);
+    mButtons.push_back(mBackToMenuButton);
+    mButtons.push_back(mExitButton);
 
-    switch (SceneManager::Instance().GetCurrentScene()) {
-    case GameScene::Level1_Boss:
-        AddImage("../Assets/HUD/Background/DefeatBackground1.png", Vector2::Zero, 1.0f, 0.0f, -1);
-        break;
-    case GameScene::Level2_Boss:
-        AddImage("../Assets/HUD/Background/DefeatBackground3.png", Vector2::Zero, 1.0f, 0.0f, -1);
-        break;
-    case GameScene::Level3_Boss:
-        AddImage("../Assets/HUD/Background/DefeatBackground2.png", Vector2::Zero, 1.0f, 0.0f, -1);
-        break;
-    default:
-        AddImage("../Assets/HUD/Background/DefeatBackground4.png", Vector2::Zero, 1.0f, 0.0f, -1);
-        break;
-    }
-
-    AddText("GAME OVER :(", Vector2(0.0f, -150.0f), SCALE, 0.0f, 60);
-
-    AddButton("TRY AGAIN",
-        [this]() { Game::Instance().ResetGame(); },
-        Vector2(0.0f, +100.0f), SCALE);
-
-    // Setup UI Screen initial state
-    mSelectedButtonIndex = 0;
-    mButtons[0]->SetHighlighted(true); // new game
-
-    // Customize buttons
-    for (auto button : mButtons) {
-        button->SetTextColor(Vector3::One);
-        button->SetTextHighlightColor(Vector3(0.8f, 0.0f, 0.8f)); // violet
-        button->SetBackgroundColor(Vector4::Zero); // white
-    }
-
-    // Customize text
-    for (auto text : mTexts) {
-        text->SetTextColor(Vector3::One);
-        text->SetBackgroundColor(Vector4::Zero); // transparent
-    }  
-
-    UIElement::SetIsVisible(false);
+    Game::Instance().OnGameOver.Subscribe([this]() { OnGameOver(); });
 }
 
 void GameOver::OnActiveKeyPress(int key)
@@ -58,12 +30,56 @@ void GameOver::OnActiveKeyPress(int key)
         return;
 
     switch (key) {
+    case SDLK_w:
+    case SDLK_UP:
+        mSelectedButtonIndex--;
+        if (mSelectedButtonIndex < 0)
+            mSelectedButtonIndex = (int)mButtons.size() - 1;
+        break;
+    case SDLK_s:
+    case SDLK_DOWN:
+        mSelectedButtonIndex++;
+        if (mSelectedButtonIndex >= (int)mButtons.size())
+            mSelectedButtonIndex = 0;
+        break;
     case SDLK_RETURN:
     case SDLK_KP_ENTER:
         mButtons[mSelectedButtonIndex]->OnClick();
-        break;
+        SetIsVisible(false);
+        return;
 
     default:
         break;
     }
+
+    UpdateSelectedButton();
+}
+
+void GameOver::OnGameOver()
+{
+    switch (SceneManager::Instance().GetCurrentScene())
+    {
+    case GameScene::Level1_Boss:
+        mBackgroundImage->SetImage("../Assets/HUD/Background/DefeatBackground1.png");
+        break;
+    case GameScene::Level2_Boss:
+        mBackgroundImage->SetImage("../Assets/HUD/Background/DefeatBackground3.png");
+        break;
+    case GameScene::Level3_Boss:
+        mBackgroundImage->SetImage("../Assets/HUD/Background/DefeatBackground2.png");
+        break;
+    default:
+        mBackgroundImage->SetImage("../Assets/HUD/Background/DefeatBackground4.png");
+        break;
+    }
+    SetIsVisible(true);
+    mSelectedButtonIndex = 0;
+    UpdateSelectedButton();
+}
+
+void GameOver::UpdateSelectedButton()
+{
+    for (auto button : mButtons)
+        button->SetHighlighted(false);
+    mButtons[mSelectedButtonIndex]->SetHighlighted(true);
 }

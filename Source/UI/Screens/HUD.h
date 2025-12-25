@@ -3,44 +3,25 @@
 #include <string>
 
 #include "UIScreen.h"
+#include "../ShadowCatHP.h"
+#include "../SkillBar.h"
+#include "../../SceneManager.h"
 
 class HUD : public UIScreen
 {
 public:
-    HUD(UIElement& parent, const std::string& fontName, int maxHealth = 6);
+    HUD(UIElement& parent, const std::string& fontName);
 
     void Update(float deltaTime) override;
 
 private:
-    // Current health values
-    int mHealth;
-    int mMaxHealth;
+    void OnSceneChanged(GameScene scene);
+    void OnPauseChanged(bool isPaused);
 
-    // Health image handling
-    void InitHealthIcons();
-    void SetHealth(int health);
-    void UpdateMaxHealth(int maxHealth, bool fill = false);
-
-    void InitSkillIcons();
-    
-    // HUD elements
-    std::vector<UIImage*> mFullHeartIcons;
-    std::vector<UIImage*> mHalfHeartIcons;
-    std::vector<UIImage*> mEmptyHeartIcons;
-
-    // Enemies left
     UIText* mEnemiesLeftCount;
     UIText* mAreaClearTxt;
 
-    // Cursor
     UIImage* mCursorImage;
-
-    // Skill feedback
-    std::vector<UIImage*> mSkillBorders;
-    std::vector<UIImage*> mSkillIcons;
-    std::vector<UIImage*> mSkillHints;
-    std::vector<UIText*> mSkillCDText;
-
-    UIText* mPauseText = nullptr;
-    UIImage* mPauseFade = nullptr;
+    ShadowCatHP* mShadowCatHP = nullptr;
+    SkillBar* mSkillBar = nullptr;
 };

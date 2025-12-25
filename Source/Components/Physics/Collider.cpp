@@ -27,7 +27,7 @@ Vector2 AABBCollider::GetMaxAt(Vector2 position) const
 
 void AABBCollider::SolveCollisions(const RigidBodyComponent* rigidBody)
 {
-	auto overlappingColliders = Physics::GetOverlappingColliders(GetComponent()->GetGame(), this);
+	auto overlappingColliders = Physics::GetOverlappingColliders(this);
 
 	for (auto other : overlappingColliders)
 	{

@@ -6,8 +6,8 @@
 #include "Physics/RigidBodyComponent.h"
 
 
-AnimatedParticle::AnimatedParticle(class Game *game, bool hasCollider, std::string particleAnimName)
-	: Actor(game), mAnimatorComponent(nullptr), mRigidBodyComponent(nullptr), mColliderComponent(nullptr), mIsDead(true), mLifeTime(1.0f)
+AnimatedParticle::AnimatedParticle(bool hasCollider, std::string particleAnimName)
+	: Actor(), mAnimatorComponent(nullptr), mRigidBodyComponent(nullptr), mColliderComponent(nullptr), mIsDead(true), mLifeTime(1.0f)
 {
 	mAnimatorComponent = new AnimatorComponent(this, particleAnimName, GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 	mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f, true);
@@ -73,7 +73,7 @@ AnimatedParticleSystemComponent::AnimatedParticleSystemComponent(class Actor *ow
 	// Create a pool of particles
 	for (int i = 0; i < poolSize; i++)
 	{
-		auto *p = new AnimatedParticle(owner->GetGame(), hasCollider, particlePath);
+		auto *p = new AnimatedParticle(hasCollider, particlePath);
 		mParticles.push_back(p);
 	}
 }

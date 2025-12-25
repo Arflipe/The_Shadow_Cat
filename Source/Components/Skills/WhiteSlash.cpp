@@ -45,7 +45,7 @@ void WhiteSlash::StartSkill(Vector2 targetPosition)
     int choice = rand() % 3;
     std::string sound = choice == 0 ? "s08_boss_simple_attack1.wav" : 
                         choice == 1 ? "s09_boss_simple_attack2.wav" : "s10_boss_simple_attack3.wav";
-    mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.5f);
+    Game::Instance().GetAudio()->PlaySound(sound, false, 0.5f);
 }
 
 void WhiteSlash::Execute()
@@ -77,11 +77,11 @@ void WhiteSlash::Execute()
         }
     }
 
-    if (mCharacter->GetGame()->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         auto vertices = ((PolygonCollider*)mAreaOfEffect)->GetVertices();
         for (auto& v : vertices) v += pos;
-        Physics::DebugDrawPolygon(mCharacter->GetGame(), vertices, 0.5f, 15);
+        Physics::DebugDrawPolygon(vertices, 0.5f, 15);
     }
 }
 

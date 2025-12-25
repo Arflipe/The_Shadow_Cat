@@ -17,8 +17,8 @@
 #include <algorithm>
 #include "../../InputHandler.h"
 
-ShadowCat::ShadowCat(Game *game, Vector2 position, const float forwardSpeed)
-    : Character(game, position, forwardSpeed)
+ShadowCat::ShadowCat(Vector2 position, const float forwardSpeed)
+    : Character(position, forwardSpeed)
     , mFootstepTimer(0.0f)
 {
     mAnimatorComponent = new AnimatorComponent(this, "ShadowCatAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
@@ -176,7 +176,7 @@ void ShadowCat::OnUpdate(float deltaTime)
 
 void ShadowCat::Kill()
 {
-    Game::Instance().SetGameOver(true);
+    Game::Instance().SetGameOver();
 }
 
 std::vector<UpgradeInfo> ShadowCat::GetRandomUpgrades() const

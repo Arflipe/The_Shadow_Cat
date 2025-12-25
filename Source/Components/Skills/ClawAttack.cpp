@@ -70,11 +70,11 @@ void ClawAttack::Execute()
 		enemyCharacter->TakeDamage(mDamage);
 	}
 
-	if (mCharacter->GetGame()->IsDebugging())
+	if (Game::Instance().IsDebugging())
 	{
 		auto vertices = ((PolygonCollider*)mAreaOfEffect)->GetVertices();
 		for (auto& v : vertices) v += pos;
-		Physics::DebugDrawPolygon(mCharacter->GetGame(), vertices, 0.5f, 15);
+		Physics::DebugDrawPolygon(vertices, 0.5f, 15);
 	}
 
 }
@@ -90,7 +90,7 @@ void ClawAttack::StartSkill(Vector2 targetPosition)
 	
 	// Play claw attack sound
 	std::string sound = rand() % 2 ? "s11_claw_attack1.wav" : "s12_claw_attack2.wav";
-	mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound(sound, false, 0.7f);
 }
 
 void ClawAttack::EndSkill()

@@ -1,8 +1,10 @@
 #include "UIRoot.h"
+#include "../../GameConstants.h"
 
 UIRoot::UIRoot()
 	: UIElement()
 {
+	mAbsolutePos = Vector2(GameConstants::WINDOW_WIDTH / 2, GameConstants::WINDOW_HEIGHT / 2);
 }
 
 UIRoot::~UIRoot()
@@ -28,7 +30,7 @@ void UIRoot::RemoveScreen(UIScreen* screen)
 void UIRoot::UpdateScreens(float deltaTime)
 {
 	for (auto screen : mScreens)
-		if (screen->IsVisible())
+		// if (screen->IsVisible())
 			screen->Update(deltaTime);
 }
 

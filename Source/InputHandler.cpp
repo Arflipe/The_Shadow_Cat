@@ -122,15 +122,12 @@ void InputHandler::HandleControllerRemoved(SDL_JoystickID instanceID)
 
 void InputHandler::HandleKeyPress(SDL_Keycode key, Uint8 repeat)
 {
-    auto& uiStack = UIManager::Instance().GetUIStack();
-    UIManager::Instance().GetRootUI()->HandleKeyPress(key, uiStack.empty() ? nullptr : uiStack.back());
-
     // Fullscreen toggle (F11) - only on initial press
     if (key == SDLK_F11 && repeat == 0)
     {
         bool isFullscreen = Game::Instance().IsFullscreen();
         Game::Instance().SetFullscreen(!isFullscreen);
-
+        
         if (!isFullscreen)
         {
             SDL_SetWindowFullscreen(Game::Instance().GetWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -144,27 +141,40 @@ void InputHandler::HandleKeyPress(SDL_Keycode key, Uint8 repeat)
             Game::Instance().GetRenderer()->UpdateViewport(GameConstants::WINDOW_WIDTH, GameConstants::WINDOW_HEIGHT);
         }
     }
-
-    // Debug toggle (F1) - only on initial press
-    if (key == SDLK_F1 && repeat == 0)
-    {
-        Game::Instance().SetDebugging(!Game::Instance().IsDebugging());
-    }
-
+    
     // Pause toggle (ESC) - only on initial press
     if (key == SDLK_ESCAPE && repeat == 0)
     {
         if (SceneManager::Instance().GetCurrentScene() > GameScene::MainMenu &&
-            LevelManager::Instance().GetPlayer() && 
-            LevelManager::Instance().GetPlayer()->GetUpgradePoints() == 0)
+        LevelManager::Instance().GetPlayer() && 
+        LevelManager::Instance().GetPlayer()->GetUpgradePoints() == 0)
         {
             Game::Instance().SetPaused(!Game::Instance().IsPaused());
         }
     }
+    
+    auto& uiStack = UIManager::Instance().GetUIStack();
+    UIManager::Instance().GetRootUI()->HandleKeyPress(key, uiStack.empty() ? nullptr : uiStack.back());
+
+    HandleDebugKeys(key, repeat);
 }
 
 void InputHandler::HandleMouseButton()
 {
     auto& uiStack = UIManager::Instance().GetUIStack();
     UIManager::Instance().GetRootUI()->HandleKeyPress(SDLK_UNKNOWN, uiStack.empty() ? nullptr : uiStack.back());
+}
+
+void InputHandler::HandleDebugKeys(SDL_Keycode key, Uint8 repeat)
+{
+    // Debug toggle (F1) - only on initial press
+    if (key == SDLK_F1 && repeat == 0)
+        Game::Instance().SetDebugging(!Game::Instance().IsDebugging());
+    // God mode toggle (F2) - only on initial press
+    if (key == SDLK_F2 && repeat == 0)
+        Game::Instance().SetGodMode(!Game::Instance().IsGodMode());
+    // Add Upgrade Point (P) - only on initial press
+    if (key == SDLK_p && repeat == 0)
+        if (LevelManager::Instance().GetPlayer())
+            LevelManager::Instance().GetPlayer()->AddUpgradePoint();
 }

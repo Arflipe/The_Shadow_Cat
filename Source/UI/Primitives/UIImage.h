@@ -12,6 +12,8 @@ public:
 
     ~UIImage();
 
+    void SetImage(const std::string &imagePath);
+    void ClearImage() { mTexture = nullptr; }
     void Draw(class Shader* shader) override;
 
 protected:

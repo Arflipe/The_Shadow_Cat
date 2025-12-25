@@ -2,8 +2,8 @@
 #include "../../Game.h"
 #include "../../LevelManager.h"
 
-BossBase::BossBase(class Game* game, Vector2 position, float forwardSpeed)
-	: EnemyBase(game, position, forwardSpeed)
+BossBase::BossBase(Vector2 position, float forwardSpeed)
+	: EnemyBase(position, forwardSpeed)
 {
 	LevelManager::Instance().RegisterBoss(this);
 }

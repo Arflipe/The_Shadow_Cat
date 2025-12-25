@@ -68,9 +68,6 @@ private:
 	bool LoadShaders();
     void CreateSpriteVerts();
 
-	// Game
-	class Game* mGame;
-
 	// Basic shader
 	class Shader* mBaseShader;
 

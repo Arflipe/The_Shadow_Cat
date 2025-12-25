@@ -5,7 +5,7 @@
 class SylvesterBoss : public BossBase
 {
 public:
-	SylvesterBoss(class Game *game, Vector2 position, float forwardSpeed = 120.0f);
+	SylvesterBoss(Vector2 position, float forwardSpeed = 120.0f);
 
 	void OnUpdate(float deltaTime) override;
 

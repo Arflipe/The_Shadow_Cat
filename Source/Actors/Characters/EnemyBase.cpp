@@ -8,8 +8,8 @@
 #include "../../Random.h"
 #include "../../Actors/UpgradeTreat.h"
 
-EnemyBase::EnemyBase(class Game* game, Vector2 position, float forwardSpeed)
-	: Character(game, position, forwardSpeed)
+EnemyBase::EnemyBase(Vector2 position, float forwardSpeed)
+	: Character(position, forwardSpeed)
 	, mStateMachine(nullptr)
 {
 	LevelManager::Instance().RegisterEnemy(this);

@@ -37,7 +37,7 @@ public:
     SceneManager& operator=(const SceneManager&) = delete;
 
     // Initialize with game reference
-    void Initialize(Game* game);
+    void Initialize();
     void Shutdown();
 
     // Scene management
@@ -53,9 +53,6 @@ private:
     // Private constructor for singleton
     SceneManager();
     ~SceneManager();
-
-    // Game reference
-    Game* mGame;
 
     // Current scene state
     GameScene mCurrentScene;

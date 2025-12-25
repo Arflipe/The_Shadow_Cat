@@ -19,6 +19,8 @@ UIScreen::UIScreen(UIElement& parent, const std::string& fontName)
 {
     UIManager::Instance().GetRootUI()->AddScreen(this);
     mFont = Game::Instance().GetRenderer()->GetFont(fontName);
+
+    UIElement::SetIsVisible(false);
 }
 
 UIScreen::~UIScreen()
