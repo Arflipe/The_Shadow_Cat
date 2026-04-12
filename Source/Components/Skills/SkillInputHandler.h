@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <vector>
 #include "../Physics/CollisionFilter.h"
+#include "SkillBase.h"
+#include "../../Event.h"
 
 enum class InputType
 {
@@ -48,14 +50,19 @@ namespace std {
 class SkillInputHandler : public Component
 {
 public:
+    static const std::vector<SkillInput> DefaultSkillInputs;
+
+    static Event<SkillInput, SkillBase*> OnSkillChanged;
+
     SkillInputHandler(class Actor* owner, int updateOrder = 10);
     
     void HandleEvent(const SDL_Event& event);
     
     void AssignSkillToSlot(int slot, class SkillBase* skill);
-    void ClearSlot(int slot);
+    void ClearSlot(int slot) { AssignSkillToSlot(slot, nullptr); }
     
     SkillBase* GetSkillInSlot(int slot) const;
+    SkillBase* GetSkillForInput(const SkillInput& input) const;
     bool IsSlotEmpty(int slot) const;
     int GetSlotCount() const { return 4; }
     

@@ -4,8 +4,8 @@
 #include "../Components/Drawing/AnimatorComponent.h"
 #include <SDL.h>
 
-LevelPortal::LevelPortal(Game* game)
-    : Actor(game)
+LevelPortal::LevelPortal()
+    : Actor()
     , mIsActive(false)
     , mAnimatorComponent(nullptr)
 {

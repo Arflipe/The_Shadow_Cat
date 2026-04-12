@@ -11,7 +11,7 @@
 class LevelPortal : public Actor
 {
 public:
-    LevelPortal(class Game* game);
+    LevelPortal();
     
     // Control portal visibility
     void Activate();

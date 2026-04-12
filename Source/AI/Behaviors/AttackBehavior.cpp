@@ -1,6 +1,7 @@
 #include "AttackBehavior.h"
 #include "../../Actors/Characters/Enemy.h"
 #include "../../Actors/Characters/ShadowCat.h"
+#include "../../Game.h"
 
 AttackBehavior::AttackBehavior()
     : AIBehavior("Attack")
@@ -15,7 +16,7 @@ void AttackBehavior::OnEnter(Enemy* enemy)
 
 void AttackBehavior::Update(Enemy* enemy, float deltaTime)
 {
-    const ShadowCat* player = enemy->GetGame()->GetPlayer();
+    const ShadowCat* player = Game::Instance().GetPlayer();
     if (!player) return;
     
     // Stop moving during attack

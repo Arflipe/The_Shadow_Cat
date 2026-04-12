@@ -8,7 +8,7 @@
 class SylvesterCat : public EnemyBase
 {
 public:
-	explicit SylvesterCat(Game* game, Vector2 position);
+	explicit SylvesterCat(Vector2 position);
 
 	void OnUpdate(float deltaTime) override;
 

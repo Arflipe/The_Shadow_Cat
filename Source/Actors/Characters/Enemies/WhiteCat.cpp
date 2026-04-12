@@ -6,8 +6,8 @@
 #include "../../../AI/Behaviors/ChaseBehavior.h"
 #include "../../../AI/Behaviors/SkillBehavior.h"
 
-WhiteCat::WhiteCat(class Game* game, Vector2 position, float forwardSpeed)
-	: EnemyBase(game, position, forwardSpeed)
+WhiteCat::WhiteCat(Vector2 position, float forwardSpeed)
+	: EnemyBase(position, forwardSpeed)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "WhiteCatAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 

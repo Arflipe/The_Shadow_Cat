@@ -3,17 +3,21 @@
 #include <string>
 
 #include "UIScreen.h"
+#include "../../SceneManager.h"
 
 class TutorialHUD : public UIScreen
 {
 public:
-    TutorialHUD(class Game* game, const std::string& fontName);
+    TutorialHUD(UIElement& parent, const std::string& fontName);
 
     bool IsControlVisible() const { return showControls; }
 
-    void ToggleControlVisibility();
-    void ShowControls();
-    void HideControls();
+    void SetControlVisibility(bool visible);
+
+    void OnKeyPress(int key) override;
+
+    void OnSceneChanged(GameScene newScene);
+
 private:
 
     // TutorialHUD elements

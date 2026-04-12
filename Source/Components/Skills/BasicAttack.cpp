@@ -10,6 +10,7 @@
 #include "../Physics/Physics.h"
 #include "../../Game.h"
 #include "SkillBase.h"
+#include "../../LevelManager.h"
 #include "../../SkillFactory.h"
 #include "../../Actors/Characters/ShadowCat.h"
 
@@ -57,12 +58,12 @@ void BasicAttack::StartSkill(Vector2 targetPosition)
         // Regular enemies and player use basic attack sounds
         sound = rand() % 2 ? "s01_basic_attack1.wav" : "s02_basic_attack2.wav";
     }
-    mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.5f);
+    Game::Instance().GetAudio()->PlaySound(sound, false, 0.5f);
 }
 
 void BasicAttack::Execute()
 {
-    mCharacter->GetGame()->GetAttackTrailActor()->GetComponent<AnimatedParticleSystemComponent>()->EmitParticleAt(
+    LevelManager::Instance().GetAttackTrailActor()->GetComponent<AnimatedParticleSystemComponent>()->EmitParticleAt(
         0.3f,
         0.0f,
         mCharacter->GetPosition() + mTargetVector * mRange,
@@ -70,7 +71,7 @@ void BasicAttack::Execute()
         mCharacter->GetScale().x < 0.0f
     );
 
-    auto collisionActor = mCharacter->GetGame()->GetCollisionQueryActor();
+    auto collisionActor = LevelManager::Instance().GetCollisionQueryActor();
 
 	((PolygonCollider*)mAreaOfEffect)->SetForward(mTargetVector);
     collisionActor->GetComponent<ColliderComponent>()->SetCollider(mAreaOfEffect);
@@ -85,11 +86,11 @@ void BasicAttack::Execute()
         enemyCharacter->TakeDamage(mDamage);
     }
 
-    if (mCharacter->GetGame()->IsDebugging())
+    if (Game::Instance().IsDebugging())
 	{
 		auto vertices = ((PolygonCollider*)mAreaOfEffect)->GetVertices();
 		for (auto& v : vertices) v += pos;
-		Physics::DebugDrawPolygon(mCharacter->GetGame(), vertices, 0.5f, 15);
+		Physics::DebugDrawPolygon(vertices, 0.5f, 15);
 	}
 }
 
@@ -103,7 +104,7 @@ void BasicAttack::EndSkill()
 
 bool BasicAttack::EnemyShouldUse()
 {
-    auto player = mCharacter->GetGame()->GetPlayer();
+    auto player = LevelManager::Instance().GetPlayer();
     if (!player) return false;
 
     Vector2 toPlayer = player->GetPosition() - mCharacter->GetPosition();

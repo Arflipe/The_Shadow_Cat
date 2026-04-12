@@ -63,7 +63,7 @@ void BossHealing::StartSkill(Vector2 targetPosition)
     mCharacter->SetAnimationLock(true);
     
     // Play healing sound
-    mCharacter->GetGame()->GetAudio()->PlaySound("e17_skill_acquired.mp3", false, 0.5f);
+    Game::Instance().GetAudio()->PlaySound("e17_skill_acquired.mp3", false, 0.5f);
 }
 
 void BossHealing::Execute()

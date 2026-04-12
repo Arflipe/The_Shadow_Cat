@@ -11,7 +11,7 @@
 class ShadowCat : public Character
 {
 public:
-    explicit ShadowCat(Game *game, Vector2 position, float forwardSpeed = 200.0f);
+    explicit ShadowCat(Vector2 position, float forwardSpeed = 200.0f);
 
     void OnProcessInput(const Uint8 *keyState) override;
     void OnHandleEvent(const SDL_Event& event) override;

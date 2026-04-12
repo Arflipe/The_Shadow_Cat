@@ -34,7 +34,7 @@ private:
 class FurBallActor : public Actor
 {
 public:
-	FurBallActor(class Game* game);
+	FurBallActor();
 	~FurBallActor();
 
 	void OnUpdate(float deltaTime) override;

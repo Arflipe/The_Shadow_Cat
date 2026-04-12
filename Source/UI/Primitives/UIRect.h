@@ -2,12 +2,12 @@
 
 
 #include "UIElement.h"
-#include "../Math.h"
+#include "../../Math.h"
 
 class UIRect : public UIElement
 {
 public:
-    UIRect(class Game* game, const Vector2 &offset, const Vector2 &size, float scale = 1.0f, float angle = 0.0f, int drawOrder = 100);
+    UIRect(UIElement& parent, const Vector2 &offset, const Vector2 &size, float scale = 1.0f, float angle = 0.0f);
     ~UIRect();
 
     void Draw(class Shader* shader) override;

@@ -4,7 +4,7 @@
 
 class WhiteCat : public EnemyBase {
 public:
-    WhiteCat(class Game* game, Vector2 position, float forwardSpeed = 200.0f);
+    WhiteCat(Vector2 position, float forwardSpeed = 200.0f);
 
 protected:
     void SetupAIBehaviors(const nlohmann::json& data) override;

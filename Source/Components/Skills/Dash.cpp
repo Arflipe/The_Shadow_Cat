@@ -45,7 +45,7 @@ void Dash::StartSkill(Vector2 targetPosition)
 	mTargetVector.Normalize();
 
 	// Play dash sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s07_dash2.wav", false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound("s07_dash2.wav", false, 0.7f);
 
 	mCharacter->SetAnimationLock(true);
 	AnimatorComponent* animator = mCharacter->GetComponent<AnimatorComponent>();

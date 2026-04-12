@@ -6,8 +6,8 @@
 #include "../../Components/Physics/ColliderComponent.h"
 #include "Character.h"
 
-Dummy::Dummy(class Game* game, Vector2 position, float forwardSpeed)
-    : Character(game, position, forwardSpeed)
+Dummy::Dummy(Vector2 position, float forwardSpeed)
+    : Character(position, forwardSpeed)
 {
     mAnimatorComponent = new AnimatorComponent(this, "DummyAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
     ((AABBCollider*)mColliderComponent->GetCollider())->SetSize(Vector2(GameConstants::TILE_SIZE, GameConstants::TILE_SIZE));

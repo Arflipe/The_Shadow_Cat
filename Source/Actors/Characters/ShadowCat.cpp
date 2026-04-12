@@ -5,6 +5,7 @@
 #include "ShadowCat.h"
 #include "../../Game.h"
 #include "../../GameConstants.h"
+#include "../../SceneManager.h"
 #include "../../Components/Drawing/AnimatorComponent.h"
 #include "../../Components/Physics/RigidBodyComponent.h"
 #include "../../Components/Physics/ColliderComponent.h"
@@ -14,9 +15,10 @@
 #include <cmath>
 #include <random>
 #include <algorithm>
+#include "../../InputHandler.h"
 
-ShadowCat::ShadowCat(Game *game, Vector2 position, const float forwardSpeed)
-    : Character(game, position, forwardSpeed)
+ShadowCat::ShadowCat(Vector2 position, const float forwardSpeed)
+    : Character(position, forwardSpeed)
     , mFootstepTimer(0.0f)
 {
     mAnimatorComponent = new AnimatorComponent(this, "ShadowCatAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
@@ -65,7 +67,7 @@ void ShadowCat::OnProcessInput(const uint8_t *state)
     }
 
     // Gamepad input
-    SDL_GameController *controller = GetGame()->mController;
+    SDL_GameController *controller = InputHandler::Instance().GetController();
     if (controller)
     {
         // Left Stick (analog)
@@ -146,7 +148,7 @@ void ShadowCat::OnUpdate(float deltaTime)
             
             // Determine which sounds to use based on ground type
             std::string sound1, sound2;
-            switch (mGame->GetGroundType())
+            switch (SceneManager::Instance().GetGroundType())
             {
             case GroundType::Grass:
                 sound1 = "e01_step_on_grass_small1.wav";
@@ -163,7 +165,7 @@ void ShadowCat::OnUpdate(float deltaTime)
             }
             
             // Play random one of the two sounds
-            mGame->GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 0.6f);
+            Game::Instance().GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 0.6f);
         }
     }
     else
@@ -174,7 +176,7 @@ void ShadowCat::OnUpdate(float deltaTime)
 
 void ShadowCat::Kill()
 {
-    mGame->SetGameOver(true);
+    Game::Instance().SetGameOver();
 }
 
 std::vector<UpgradeInfo> ShadowCat::GetRandomUpgrades() const

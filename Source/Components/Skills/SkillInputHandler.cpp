@@ -7,6 +7,17 @@
 #include "SkillBase.h"
 #include "Stomp.h"
 #include "../../Game.h"
+#include <cstddef>
+
+const std::vector<SkillInput> SkillInputHandler::DefaultSkillInputs = {
+    SkillInput(InputType::Mouse, SDL_BUTTON_LEFT),
+    SkillInput(InputType::Mouse, SDL_BUTTON_RIGHT),
+    SkillInput(InputType::Keyboard, SDL_SCANCODE_Q),
+    SkillInput(InputType::Keyboard, SDL_SCANCODE_E),
+    SkillInput(InputType::Keyboard, SDL_SCANCODE_LSHIFT)
+};
+
+Event<SkillInput, SkillBase*> SkillInputHandler::OnSkillChanged;
 
 SkillInputHandler::SkillInputHandler(Actor* owner, int updateOrder)
     : Component(owner, updateOrder)
@@ -20,11 +31,11 @@ SkillInputHandler::SkillInputHandler(Actor* owner, int updateOrder)
     SkillInput keyEInput{InputType::Keyboard, SDL_SCANCODE_E};
     SkillInput keyShiftInput{InputType::Keyboard, SDL_SCANCODE_LSHIFT};
 
-    mKeyToSkill[leftMouseInput] = new BasicAttack(owner);
-    mKeyToSkill[rightMouseInput] = new ClawAttack(owner);
-    mKeyToSkill[keyEInput] = new FurBall(owner);
-    mKeyToSkill[keyQInput] = new Stomp(owner);
-    mKeyToSkill[keyShiftInput] = new ShadowForm(owner);
+    AssignSkillToSlot(0, new BasicAttack(owner));
+    AssignSkillToSlot(1, new ClawAttack(owner));
+    AssignSkillToSlot(2, new Stomp(owner));
+    AssignSkillToSlot(3, new FurBall(owner));
+    AssignSkillToSlot(4, new ShadowForm(owner));
 }
 
 void SkillInputHandler::HandleEvent(const SDL_Event& event)
@@ -36,24 +47,18 @@ void SkillInputHandler::HandleEvent(const SDL_Event& event)
         mKeyToSkill[SkillInput{InputType::Keyboard, event.key.keysym.scancode}] :
         mKeyToSkill[SkillInput{InputType::Mouse, static_cast<Uint8>(event.button.button)}];
     
-    Vector2 targetPosition = mOwner->GetGame()->GetMouseWorldPosition();
+    Vector2 targetPosition = Game::Instance().GetMouseWorldPosition();
     if (skill && skill->CanUse(targetPosition, true))
-    {
-        SDL_Log("Skill used: %s", skill->GetName().c_str());
         skill->StartSkill(targetPosition);
-    }
 }
 
 void SkillInputHandler::AssignSkillToSlot(int slot, SkillBase* skill)
 {
     SkillInput key = SlotToKey(slot);
-    if (key != SkillInput()) mKeyToSkill[key] = skill;
-}
+    if (key == SkillInput()) return; // Invalid slot
 
-void SkillInputHandler::ClearSlot(int slot)
-{
-    SkillInput key = SlotToKey(slot);
-    if (key != SkillInput()) mKeyToSkill[key] = nullptr;
+    mKeyToSkill[key] = skill;
+    OnSkillChanged.Invoke(key, skill);
 }
 
 SkillBase* SkillInputHandler::GetSkillInSlot(int slot) const
@@ -62,6 +67,14 @@ SkillBase* SkillInputHandler::GetSkillInSlot(int slot) const
     if (key == SkillInput()) return nullptr;
     
     auto it = mKeyToSkill.find(key);
+    if (it != mKeyToSkill.end()) return it->second;
+    
+    return nullptr;
+}
+
+SkillBase* SkillInputHandler::GetSkillForInput(const SkillInput& input) const
+{
+    auto it = mKeyToSkill.find(input);
     if (it != mKeyToSkill.end()) return it->second;
     
     return nullptr;
@@ -85,7 +98,7 @@ SkillInput SkillInputHandler::SlotToKey(int slot) const
     else if (slot == 2) return {InputType::Keyboard, SDL_SCANCODE_Q};
     else if (slot == 3) return {InputType::Keyboard, SDL_SCANCODE_E};
     else if (slot == 4) return {InputType::Keyboard, SDL_SCANCODE_LSHIFT};
-    else return {InputType::Keyboard, SDL_SCANCODE_UNKNOWN};
+    else return SkillInput(); // Returns InputType::None for invalid slots
 }
 
 int SkillInputHandler::KeyToSlot(SkillInput key) const

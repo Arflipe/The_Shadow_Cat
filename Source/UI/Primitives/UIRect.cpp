@@ -1,7 +1,7 @@
 #include "UIRect.h"
 
-UIRect::UIRect(class Game* game, const Vector2 &offset, const Vector2 &size, const float scale, float angle, int drawOrder)
-        : UIElement(game, offset, scale, angle, drawOrder)
+UIRect::UIRect(UIElement& parent, const Vector2 &offset, const Vector2 &size, const float scale, float angle)
+        : UIElement(parent, offset, scale, angle)
         , mSize(size)
         , mColor(Vector4(0.0f,0.0f,0.0f,1.0f))
 {

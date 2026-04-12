@@ -7,6 +7,9 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include "../../Actors/DebugActor.h"
+
+#include "../../LevelManager.h"
 
 bool Physics::CheckAABBAABB(const AABBCollider *a, const AABBCollider *b, Vector2 *positionA, Vector2 *positionB)
 {
@@ -74,10 +77,10 @@ bool Physics::CheckPolygonAABB(const PolygonCollider* poly, const AABBCollider* 
 	return OverlapPolygons(polygon, box);
 }
 
-std::vector<ColliderComponent*> Physics::GetOverlappingColliders(Game* game, Collider* collider)
+std::vector<ColliderComponent*> Physics::GetOverlappingColliders(Collider* collider)
 {
 	std::vector<ColliderComponent*> hitColliders;
-	auto colliderComponents = game->GetColliders();
+	auto colliderComponents = LevelManager::Instance().GetColliders();
 	CollisionFilter filter = collider->GetComponent()->GetFilter();
 	for (auto c : colliderComponents)
 	{
@@ -90,10 +93,10 @@ std::vector<ColliderComponent*> Physics::GetOverlappingColliders(Game* game, Col
 	return hitColliders;
 }
 
-std::vector<ColliderComponent*> Physics::ConeCast(Game *game, Vector2 origin, Vector2 direction, float angle, float radius, CollisionFilter filter)
+std::vector<ColliderComponent*> Physics::ConeCast(Vector2 origin, Vector2 direction, float angle, float radius, CollisionFilter filter)
 {
 	float radiusSq = radius * radius;
-	auto colliderComponents = game->GetColliders();
+	auto colliderComponents = LevelManager::Instance().GetColliders();
 	std::vector<Vector2> coneTriangle = GetConeVertices(origin, direction, angle, radius);
 	std::vector<ColliderComponent*> hitColliders;
 	for (auto c : colliderComponents)
@@ -105,14 +108,14 @@ std::vector<ColliderComponent*> Physics::ConeCast(Game *game, Vector2 origin, Ve
 		if (OverlapTriangleCollider(coneTriangle, c->GetCollider())) hitColliders.push_back(c);
 	}
 
-	if (game->IsDebugging()) DebugDrawPolygon(game, coneTriangle, 0.5f, 15);
+	if (Game::Instance().IsDebugging()) DebugDrawPolygon(coneTriangle, 0.5f, 15);
 	return hitColliders;
 }
 
-std::vector<ColliderComponent*> Physics::CheckCollisionAt(Game* game, Collider* collider, Vector2 newPosition, CollisionFilter filter)
+std::vector<ColliderComponent*> Physics::CheckCollisionAt(Collider* collider, Vector2 newPosition, CollisionFilter filter)
 {
 	std::vector<ColliderComponent*> hitColliders;
-	auto colliderComponents = game->GetColliders();
+	auto colliderComponents = LevelManager::Instance().GetColliders();
 	for (auto c : colliderComponents)
 	{
 		if (!c->IsEnabled()) continue;
@@ -254,9 +257,9 @@ bool Physics::PolygonsOverlapOnAxis(const std::vector<Vector2> &polyA, const std
 	return !(maxA < minB || maxB < minA);
 }
 
-void Physics::DebugDrawPolygon(Game* game, const std::vector<Vector2>& polygon, float lifetime, int particlesPerEdge)
+void Physics::DebugDrawPolygon(const std::vector<Vector2>& polygon, float lifetime, int particlesPerEdge)
 {
-	auto particleSystem = game->GetDebugActor()->GetParticleSystemComponent();
+	auto particleSystem = LevelManager::Instance().GetDebugActor()->GetParticleSystemComponent();
     if (!particleSystem || polygon.size() < 2) return;
     for (size_t i = 0; i < polygon.size(); ++i)
     {

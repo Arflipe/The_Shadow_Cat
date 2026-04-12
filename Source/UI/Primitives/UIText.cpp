@@ -1,0 +1,94 @@
+#include "UIText.h"
+#include "../../Renderer/Font.h"
+#include "../../Renderer/Texture.h"
+#include "../../Renderer/Shader.h"
+#include "../../GameConstants.h"
+
+UIText::UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, float scale, float angle,
+               int pointSize, const unsigned wrapLength)
+   :UIImage(parent, offset, scale, angle)
+   ,mFont(font)
+   ,mPointSize(pointSize)
+   ,mWrapLength(wrapLength)
+   ,mTextColor(Color::White)
+   ,mBackgroundColor(0.0f,0.0f,0.0f,1.0f)
+   ,mMargin(Vector2(50.0f, 10.f))
+{
+    SetText(text);
+}
+
+UIText::UIText(UIElement& parent, const std::string& text, class Font* font, const Vector2 &offset, Vector3 color, Vector4 backgroundColor,
+    float scale, float angle, int pointSize, const unsigned wrapLength)
+    :UIImage(parent, offset, scale, angle)
+    ,mFont(font)
+    ,mPointSize(pointSize)
+    ,mWrapLength(wrapLength)
+    ,mTextColor(color)
+    ,mBackgroundColor(backgroundColor)
+    ,mMargin(Vector2(0.0f, 0.f))
+{
+    SetText(text);
+}
+
+UIText::~UIText()
+{
+
+}
+
+void UIText::SetText(const std::string &text)
+{
+    // Clear out previous title texture if it exists
+    if (mTexture)
+    {
+        mTexture->Unload();
+        delete mTexture;
+        mTexture = nullptr;
+    }
+
+    // Create texture for title
+    mText = text;
+    mTexture = mFont->RenderText(mText, mTextColor, mPointSize, mWrapLength);
+}
+
+void UIText::SetTextColor(const Vector3 &color)
+{
+    // Clear out previous title texture if it exists
+    if (mTexture)
+    {
+        mTexture->Unload();
+        delete mTexture;
+        mTexture = nullptr;
+    }
+
+    mTextColor = color;
+    mTexture = mFont->RenderText(mText, mTextColor, mPointSize, mWrapLength);
+}
+
+void UIText::Draw(class Shader* shader)
+{
+    if(!mTexture) return;
+
+    // Draw Text Background
+    // if (mBackgroundColor.w > 0.0001f) // Skip if fully transparent
+    //     {
+    //     Matrix4 scaleMat = Matrix4::CreateScale((static_cast<float>(mTexture->GetWidth()) + mMargin.x) * mScale,
+    //                                             (static_cast<float>(mTexture->GetHeight()) + mMargin.y) * mScale, 1.0f);
+    //     Matrix4 transMat = Matrix4::CreateTranslation(Vector3(mAbsolutePos.x, mAbsolutePos.y, 0.0f));
+
+    //     // Set world transform
+    //     Matrix4 world = scaleMat * transMat;
+    //     shader->SetMatrixUniform("uWorldTransform", world);
+    //     shader->SetVectorUniform("uTexRect", Vector4::UnitRect);
+    //     shader->SetVectorUniform("uCameraPos", Vector2::Zero);
+
+    //     // Set uTextureFactor and color
+    //     shader->SetFloatUniform("uTextureFactor", 0.0f); // add alpha later
+    //     shader->SetVectorUniform("uColor", Vector3(mBackgroundColor.x, mBackgroundColor.y, mBackgroundColor.z   ));
+
+    //     // Draw quad
+    //     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    // }
+
+    // Draw text
+    UIImage::Draw(shader);
+}

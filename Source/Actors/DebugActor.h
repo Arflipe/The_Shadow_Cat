@@ -5,7 +5,7 @@ class ParticleSystemComponent;
 
 class DebugActor : public Actor {
 public:
-    DebugActor(Game* game);
+    DebugActor();
     ~DebugActor() override = default;
 
     ParticleSystemComponent *GetParticleSystemComponent() { return mParticleSystem; }

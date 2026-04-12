@@ -5,7 +5,18 @@
 class GameOver : public UIScreen
 {
 public:
-    GameOver(class Game* game, const std::string& fontName);
+    GameOver(UIElement& parent, const std::string& fontName);
 
-    void HandleKeyPress(int key) override;
+    void OnActiveKeyPress(int key) override;
+
+private:
+    void OnGameOver();
+
+    void UpdateSelectedButton();
+
+    UIText* mGameOverText = nullptr;
+    UIImage* mBackgroundImage = nullptr;
+    UIButton* mTryAgainButton = nullptr;
+    UIButton* mBackToMenuButton = nullptr;
+    UIButton* mExitButton = nullptr;
 };

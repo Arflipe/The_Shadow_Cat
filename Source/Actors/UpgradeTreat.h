@@ -8,7 +8,7 @@
 class UpgradeTreat : public Actor
 {
 public:
-	UpgradeTreat(class Game* game);
+	UpgradeTreat();
 	
 	void Awake(const Vector2& position);
 	void Kill();

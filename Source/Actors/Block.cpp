@@ -6,8 +6,8 @@
 #include "../Components/Physics/Collider.h"
 #include "../Components/Physics/CollisionFilter.h"
 
-Block::Block(Game *game, const std::string &texturePath)
-	: Actor(game)
+Block::Block(const std::string &texturePath)
+	: Actor()
 {
 	new AnimatorComponent(this, texturePath, GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 
@@ -20,8 +20,8 @@ Block::Block(Game *game, const std::string &texturePath)
 	new ColliderComponent(this, 0, 0, collider, filter, true);
 }
 
-Block::Block(Game *game, int tileID)
-	: Actor(game)
+Block::Block(int tileID)
+	: Actor()
 {
 	auto animator = new AnimatorComponent(this, "BlockAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 	animator->LoopAnimation(std::to_string(tileID));

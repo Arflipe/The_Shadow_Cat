@@ -5,7 +5,17 @@
 class WinScreen : public UIScreen
 {
 public:
-    WinScreen(class Game* game, const std::string& fontName);
+    WinScreen(UIElement& parent, const std::string& fontName);
 
-    void HandleKeyPress(int key) override;
+    void OnActiveKeyPress(int key) override;
+
+private:
+    void OnGameWon();
+
+    void UpdateSelectedButton();
+
+    UIText* mWinText = nullptr;
+    UIImage* mBackgroundImage = nullptr;
+    UIButton* mBackToMenuButton = nullptr;
+    UIButton* mExitButton = nullptr;
 };

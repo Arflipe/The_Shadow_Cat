@@ -1,6 +1,7 @@
 #include "WhiteBubble.h"
 #include "../../Game.h"
 #include "../../GameConstants.h"
+#include "../../LevelManager.h"
 #include "../Drawing/AnimatorComponent.h"
 #include "../../Actors/Characters/Character.h"
 #include "../Physics/ColliderComponent.h"
@@ -35,11 +36,11 @@ nlohmann::json WhiteBubble::LoadSkillDataFromJSON(const std::string& fileName)
 void WhiteBubble::Execute()
 {
 	// Play bubble sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.5f);
+	Game::Instance().GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.5f);
 
 	// Spawn bubble at target position (where boss is aiming)
 	// mTargetVector contains the target position after StartSkill
-	mCharacter->GetGame()->GetWhiteBubbleActor()->Awake(
+	LevelManager::Instance().GetWhiteBubbleActor()->Awake(
 		mTargetVector, // Position where bubble spawns (target position from StartSkill)
 		mDamage,
 		mCharacter->GetSkillFilter(),
@@ -66,7 +67,7 @@ void WhiteBubble::EndSkill()
 
 bool WhiteBubble::EnemyShouldUse()
 {
-	auto player = mCharacter->GetGame()->GetPlayer();
+	auto player = LevelManager::Instance().GetPlayer();
 	if (!player) return false;
 
 	Vector2 toPlayer = player->GetPosition() - mCharacter->GetPosition();
@@ -75,8 +76,8 @@ bool WhiteBubble::EnemyShouldUse()
 	return distanceToPlayer <= mRange;
 }
 
-WhiteBubbleActor::WhiteBubbleActor(class Game* game)
-	: Actor(game)
+WhiteBubbleActor::WhiteBubbleActor()
+	: Actor()
 	, mDamageCooldown(0.5f) // Damage every 0.5 seconds
 	, mLastDamageTime(0.0f)
 {
@@ -108,7 +109,7 @@ void WhiteBubbleActor::OnUpdate(float deltaTime)
 		ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
 		if (colliderComp && colliderComp->GetCollider())
 		{
-			auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+			auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 			for (auto collider : hitColliders)
 			{
 				auto actor = collider->GetOwner();

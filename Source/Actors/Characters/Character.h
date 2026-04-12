@@ -11,8 +11,8 @@ class ColliderComponent;
 class Character : public Actor
 {
 public:
-    Character(class Game* game, Vector2 position, float forwardSpeed = 200.0f);
-    Character(class Game* game, float forwardSpeed = 200.0f);
+    Character(Vector2 position, float forwardSpeed = 200.0f);
+    Character(float forwardSpeed = 200.0f);
     virtual ~Character();
 
     void OnUpdate(float deltaTime) override;

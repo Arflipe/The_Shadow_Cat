@@ -7,7 +7,7 @@
 class AnimatedParticle : public Actor
 {
 public:
-	AnimatedParticle(class Game *game, bool hasCollider, std::string particleAnimName);
+	AnimatedParticle(bool hasCollider, std::string particleAnimName);
 
 	void OnUpdate(float deltaTime) override;
 

@@ -6,6 +6,7 @@
 #include "../Drawing/AnimatorComponent.h"
 #include "../Physics/Physics.h"
 #include "../../Game.h"
+#include "../../LevelManager.h"
 #include "../../SkillFactory.h"
 #include "../../Actors/Characters/ShadowCat.h"
 
@@ -44,13 +45,13 @@ void WhiteSlash::StartSkill(Vector2 targetPosition)
     int choice = rand() % 3;
     std::string sound = choice == 0 ? "s08_boss_simple_attack1.wav" : 
                         choice == 1 ? "s09_boss_simple_attack2.wav" : "s10_boss_simple_attack3.wav";
-    mCharacter->GetGame()->GetAudio()->PlaySound(sound, false, 0.5f);
+    Game::Instance().GetAudio()->PlaySound(sound, false, 0.5f);
 }
 
 void WhiteSlash::Execute()
 {
     // Emit WhiteSlash particle effect (similar to AttackTrail)
-    mCharacter->GetGame()->GetWhiteSlashActor()->GetComponent<AnimatedParticleSystemComponent>()->EmitParticleAt(
+    LevelManager::Instance().GetWhiteSlashActor()->GetComponent<AnimatedParticleSystemComponent>()->EmitParticleAt(
         0.3f,
         0.0f,
         mCharacter->GetPosition() + mTargetVector * mRange,
@@ -58,7 +59,7 @@ void WhiteSlash::Execute()
         mCharacter->GetScale().x < 0.0f
     );
 
-    auto collisionActor = mCharacter->GetGame()->GetCollisionQueryActor();
+    auto collisionActor = LevelManager::Instance().GetCollisionQueryActor();
 
     ((PolygonCollider*)mAreaOfEffect)->SetForward(mTargetVector);
     collisionActor->GetComponent<ColliderComponent>()->SetCollider(mAreaOfEffect);
@@ -76,11 +77,11 @@ void WhiteSlash::Execute()
         }
     }
 
-    if (mCharacter->GetGame()->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         auto vertices = ((PolygonCollider*)mAreaOfEffect)->GetVertices();
         for (auto& v : vertices) v += pos;
-        Physics::DebugDrawPolygon(mCharacter->GetGame(), vertices, 0.5f, 15);
+        Physics::DebugDrawPolygon(vertices, 0.5f, 15);
     }
 }
 
@@ -94,7 +95,7 @@ void WhiteSlash::EndSkill()
 
 bool WhiteSlash::EnemyShouldUse()
 {
-    auto player = mCharacter->GetGame()->GetPlayer();
+    auto player = LevelManager::Instance().GetPlayer();
     if (!player) return false;
 
     Vector2 toPlayer = player->GetPosition() - mCharacter->GetPosition();

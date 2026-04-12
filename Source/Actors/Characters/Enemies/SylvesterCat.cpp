@@ -3,10 +3,13 @@
 #include "../../../AI/AIStateMachine.h"
 #include "../../../Components/Skills/Dash.h"
 #include "../ShadowCat.h"
+#include "../../../LevelManager.h"
 #include "../../../Components/Skills/ShadowForm.h"
+#include "../../../Components/Drawing/AnimatorComponent.h"
+#include "../../../Components/Skills/Stomp.h"
 
-SylvesterCat::SylvesterCat(Game* game, Vector2 position)
-	: EnemyBase(game, position, 150.0f)
+SylvesterCat::SylvesterCat(Vector2 position)
+	: EnemyBase(position, 150.0f)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "SylvesterCatAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 
@@ -56,7 +59,7 @@ void SylvesterCat::SetupAIBehaviors(const nlohmann::json& data)
 	mPatrolBehavior->AddTransition(mFleeBehavior->GetName(), [this]() 
 	{
 		if (mFleeTimer > 0.0f) return false;
-		float distanceToPlayer = (mGame->GetPlayer()->GetPosition() - mPosition).Length();
+		float distanceToPlayer = (LevelManager::Instance().GetPlayer()->GetPosition() - mPosition).Length();
 		return distanceToPlayer <= mFleeBehavior->GetFleeDistance() / 2.0f; 
 	});
 

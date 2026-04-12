@@ -1,9 +1,10 @@
 #include "UIButton.h"
-#include "../Renderer/Texture.h"
+#include "../../Renderer/Texture.h"
+#include "UIElement.h"
 
-UIButton::UIButton(class Game* game, std::function<void()> onClick, const std::string& text, class Font* font,
-                   const Vector2 &offset, float scale, float angle, int pointSize, const unsigned wrapLength, int drawOrder)
-        :UIText(game, text, font, offset, scale, angle, pointSize, wrapLength, drawOrder)
+UIButton::UIButton(UIElement& parent, const std::string& text, std::function<void()> onClick, class Font* font,
+                   const Vector2 &offset, float scale, float angle, int pointSize, const unsigned wrapLength)
+        :UIText(parent, text, font, offset, scale, angle, pointSize, wrapLength)
         ,mOnClick(onClick)
         ,mHighlighted(false)
 {

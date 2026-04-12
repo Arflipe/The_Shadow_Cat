@@ -6,6 +6,8 @@
 #include <fstream>
 #include <map>
 
+#include "../../LevelManager.h"
+
 const std::string ANIMATION_DATA_PATH = "../Assets/Data/Animation/";
 
 AnimatorComponent::AnimatorComponent(class Actor *owner, const std::string &animationName,
@@ -15,7 +17,7 @@ AnimatorComponent::AnimatorComponent(class Actor *owner, const std::string &anim
 {
 	bool loaded = LoadAnimationData(animationName);
 	if (!loaded)
-		mSpriteTexture = mOwner->GetGame()->GetRenderer()->GetTexture("../Assets/Sprites/NoTexture/NoTexture.png");
+		mSpriteTexture = Game::Instance().GetRenderer()->GetTexture("../Assets/Sprites/NoTexture/NoTexture.png");
 }
 
 bool AnimatorComponent::LoadAnimationData(const std::string &animationName)
@@ -42,7 +44,7 @@ bool AnimatorComponent::LoadAnimationData(const std::string &animationName)
 		return false;
 	}
 
-	mSpriteTexture = mOwner->GetGame()->GetRenderer()->GetTexture(texturePath);
+	mSpriteTexture = Game::Instance().GetRenderer()->GetTexture(texturePath);
 
 	std::string spriteSheetDataPath = animData["spriteSheetData"].get<std::string>();
 	if (spriteSheetDataPath.empty())
@@ -172,7 +174,7 @@ void AnimatorComponent::Draw(Renderer *renderer)
 			Vector3(1.0f, 1.0f, 1.0f),
 			mSpriteTexture,
 			texRect,
-			mOwner->GetGame()->GetCameraPos(),
+			LevelManager::Instance().GetCameraPos(),
 			flipH,
 			flipV,
 			mTextureFactor);
@@ -230,6 +232,8 @@ bool AnimatorComponent::SetAnimation(const std::string &name, bool reset)
 	mCurrentAnimation = &animIter->second;
 	mCurrentFrameIndex = 0;
 	mFrameTimer = 0.0f;
+
+	mIsPaused = mCurrentAnimation->frames.size() <= 1;
 
 	return true;
 }

@@ -1,6 +1,7 @@
 #include "WhiteBomb.h"
 #include "../../Game.h"
 #include "../../GameConstants.h"
+#include "../../LevelManager.h"
 #include "../Drawing/AnimatorComponent.h"
 #include "../../Actors/Characters/Character.h"
 #include "../Physics/ColliderComponent.h"
@@ -36,9 +37,9 @@ void WhiteBomb::Execute()
 	float lifetime = mRange / mProjectileSpeed;
 
 	// Play bomb sound
-	mCharacter->GetGame()->GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
+	Game::Instance().GetAudio()->PlaySound("s05_furball_launch1.wav", false, 0.7f);
 
-	mCharacter->GetGame()->GetWhiteBombActor()->Awake(
+	LevelManager::Instance().GetWhiteBombActor()->Awake(
 		mCharacter->GetPosition() + mTargetVector * 20.0f,
 		mTargetVector,
 		mProjectileSpeed,
@@ -68,7 +69,7 @@ void WhiteBomb::EndSkill()
 
 bool WhiteBomb::EnemyShouldUse()
 {
-	auto player = mCharacter->GetGame()->GetPlayer();
+	auto player = LevelManager::Instance().GetPlayer();
 	if (!player) return false;
 
 	Vector2 toPlayer = player->GetPosition() - mCharacter->GetPosition();
@@ -77,8 +78,8 @@ bool WhiteBomb::EnemyShouldUse()
 	return distanceToPlayer <= mRange;
 }
 
-WhiteBombActor::WhiteBombActor(class Game* game)
-	: Actor(game)
+WhiteBombActor::WhiteBombActor()
+	: Actor()
 {
 	mAnimatorComponent = new AnimatorComponent(this, "WhiteBombAnim", GameConstants::TILE_SIZE, GameConstants::TILE_SIZE);
 	CollisionFilter filter;
@@ -103,7 +104,7 @@ void WhiteBombActor::OnUpdate(float deltaTime)
 	}
 
 	// Always follow the player
-	auto player = GetGame()->GetPlayer();
+	auto player = LevelManager::Instance().GetPlayer();
 	if (player && !player->IsDead())
 	{
 		Vector2 toPlayer = player->GetPosition() - GetPosition();
@@ -133,7 +134,7 @@ void WhiteBombActor::OnUpdate(float deltaTime)
 
 	// Check for collisions
 	ColliderComponent* colliderComp = GetComponent<ColliderComponent>();
-	auto hitColliders = Physics::GetOverlappingColliders(GetGame(), colliderComp->GetCollider());
+	auto hitColliders = Physics::GetOverlappingColliders(colliderComp->GetCollider());
 	for (auto collider : hitColliders)
 	{
 		auto enemyActor = collider->GetOwner();

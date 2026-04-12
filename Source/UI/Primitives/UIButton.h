@@ -2,14 +2,15 @@
 
 #include <functional>
 #include <string>
+#include "UIElement.h"
 #include "UIText.h"
-#include "../Math.h"
+#include "../../Math.h"
 
 class UIButton : public UIText
 {
 public:
-    UIButton(class Game* game, std::function<void()> onClick, const std::string& text, class Font* font,
-             const Vector2 &offset, float scale = 1.0f, float angle = 0.0f, int pointSize = 40, const unsigned wrapLength = 1024, int drawOrder = 100);
+    UIButton(UIElement& parent, const std::string& text, std::function<void()> onClick, class Font* font,
+             const Vector2 &offset, float scale = 1.0f, float angle = 0.0f, int pointSize = 40, const unsigned wrapLength = 1024);
 
     ~UIButton();
 

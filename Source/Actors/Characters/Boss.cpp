@@ -10,14 +10,16 @@
 #include <cfloat>
 #include <SDL.h>
 
+#include "../../LevelManager.h"
+
 namespace {
     constexpr float SPAWN_ANIMATION_DURATION = 2.0f;
     constexpr float DEATH_ANIMATION_DURATION = 1.0f;
     constexpr int BOSS_BASE_HP = 300;
 }
 
-Boss::Boss(class Game* game, Vector2 arenaCenter, BossType type, bool playSpawnAnimation)
-    : Character(game, 0.0f)  // Bosses don't use forward speed
+Boss::Boss(Vector2 arenaCenter, BossType type, bool playSpawnAnimation)
+    : Character(0.0f)  // Bosses don't use forward speed
     , mDeathTimer(0.0f)
     , mSpawnTimer(0.0f)
     , mBossType(type)
@@ -90,7 +92,7 @@ Boss::Boss(class Game* game, Vector2 arenaCenter, BossType type, bool playSpawnA
 Boss::~Boss()
 {
     // Unregister from Game
-    // GetGame()->UnregisterBoss(this);
+    // Game::Instance().UnregisterBoss(this);
 }
 
 void Boss::OnUpdate(float deltaTime)
@@ -128,7 +130,7 @@ void Boss::OnUpdate(float deltaTime)
             if (playerInArena)
             {
                 mCurrentState = BossState::Combat;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Idle -> Combat");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Idle -> Combat");
             }
             break;
             
@@ -136,12 +138,12 @@ void Boss::OnUpdate(float deltaTime)
             if (playerInAttackRange)
             {
                 mCurrentState = BossState::Attacking;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Combat -> Attacking");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Combat -> Attacking");
             }
             else if (!playerInArena)
             {
                 mCurrentState = BossState::Idle;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Combat -> Idle (player left arena)");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Combat -> Idle (player left arena)");
             }
             break;
             
@@ -149,7 +151,7 @@ void Boss::OnUpdate(float deltaTime)
             if (!playerInAttackRange)
             {
                 mCurrentState = BossState::Combat;
-                if (mGame->IsDebugging()) SDL_Log("Boss: Attacking -> Combat");
+                if (Game::Instance().IsDebugging()) SDL_Log("Boss: Attacking -> Combat");
             }
             break;
             
@@ -222,7 +224,7 @@ void Boss::Kill()
     // Play death animation
     mAnimatorComponent->PlayAnimation("Death", 1);
     
-    if (mGame->IsDebugging())
+    if (Game::Instance().IsDebugging())
     {
         SDL_Log("Boss: Defeated!");
     }
@@ -231,7 +233,7 @@ void Boss::Kill()
 // Helper: Get player reference if valid
 const ShadowCat* Boss::GetPlayerIfValid() const
 {
-    return mGame->GetPlayer();
+    return LevelManager::Instance().GetPlayer();
 }
 
 // Helper: Calculate squared distance to player
@@ -282,7 +284,7 @@ void Boss::UpdateSpawning(float deltaTime)
     if (mSpawnTimer >= SPAWN_ANIMATION_DURATION)
     {
         mCurrentState = BossState::Idle;
-        if (mGame->IsDebugging())
+        if (Game::Instance().IsDebugging())
         {
             SDL_Log("Boss: Spawning complete -> Idle");
         }
@@ -350,5 +352,5 @@ void Boss::UpdateAttacking(float deltaTime)
 
 void Boss::OnDebugDraw(class Renderer* renderer)
 {
-    BossDebugDrawer::Draw(renderer, this, mGame);
+    BossDebugDrawer::Draw(renderer, this);
 }

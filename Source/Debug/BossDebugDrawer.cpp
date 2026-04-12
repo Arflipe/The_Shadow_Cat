@@ -5,15 +5,17 @@
 #include "../Game.h"
 #include <SDL.h>
 
-void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
+#include "../LevelManager.h"
+
+void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss)
 {
-    if (!game->IsDebugging()) return;
+    if (!Game::Instance().IsDebugging()) return;
     
     Vector2 position = boss->GetPosition();
-    Vector2 cameraPos = game->GetCameraPos();
+    Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
     
     // Draw line to player if player exists
-    auto player = game->GetPlayer();
+    auto player = LevelManager::Instance().GetPlayer();
     if (player && boss->GetCurrentState() != Boss::BossState::Dead)
     {
         Vector2 playerPos = player->GetPosition();
@@ -25,19 +27,19 @@ void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
     switch (boss->GetCurrentState())
     {
         case Boss::BossState::Spawning:
-            DrawSpawningState(renderer, boss, game);
+            DrawSpawningState(renderer, boss);
             break;
             
         case Boss::BossState::Idle:
-            DrawIdleState(renderer, boss, game);
+            DrawIdleState(renderer, boss);
             break;
             
         case Boss::BossState::Combat:
-            DrawCombatState(renderer, boss, game);
+            DrawCombatState(renderer, boss);
             break;
             
         case Boss::BossState::Attacking:
-            DrawAttackingState(renderer, boss, game);
+            DrawAttackingState(renderer, boss);
             break;
             
         case Boss::BossState::Dead:
@@ -57,21 +59,21 @@ void BossDebugDrawer::Draw(Renderer* renderer, const Boss* boss, Game* game)
     }
 }
 
-void BossDebugDrawer::DrawSpawningState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawSpawningState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
-    Vector2 cameraPos = game->GetCameraPos();
+    Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
     Vector3 spawnColor = Vector3(1.0f, 1.0f, 0.0f); // Yellow
     
     // Draw pulsing circle during spawn
     DrawCircle(renderer, position, 100.0f, spawnColor, cameraPos, 16);
 }
 
-void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();
-    Vector2 cameraPos = game->GetCameraPos();
+    Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
     
     // Draw detection radius (arena range)
     DrawDetectionRadius(renderer, position, boss->GetDetectionRadius(), false, cameraPos);
@@ -80,11 +82,11 @@ void BossDebugDrawer::DrawIdleState(Renderer* renderer, const Boss* boss, Game* 
     DrawArenaRadius(renderer, arenaCenter, 300.0f, cameraPos);
 }
 
-void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();
-    Vector2 cameraPos = game->GetCameraPos();
+    Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
     
     // Draw detection radius (player detected - red)
     DrawDetectionRadius(renderer, position, boss->GetDetectionRadius(), true, cameraPos);
@@ -96,11 +98,11 @@ void BossDebugDrawer::DrawCombatState(Renderer* renderer, const Boss* boss, Game
     DrawArenaRadius(renderer, arenaCenter, 300.0f, cameraPos);
 }
 
-void BossDebugDrawer::DrawAttackingState(Renderer* renderer, const Boss* boss, Game* game)
+void BossDebugDrawer::DrawAttackingState(Renderer* renderer, const Boss* boss)
 {
     Vector2 position = boss->GetPosition();
     Vector2 arenaCenter = boss->GetArenaCenter();
-    Vector2 cameraPos = game->GetCameraPos();
+    Vector2 cameraPos = LevelManager::Instance().GetCameraPos();
     
     // Draw attack range (bright red during attack)
     DrawAttackRange(renderer, position, boss->GetAttackRange(), cameraPos);

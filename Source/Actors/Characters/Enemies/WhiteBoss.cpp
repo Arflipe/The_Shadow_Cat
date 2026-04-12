@@ -1,5 +1,6 @@
 #include "WhiteBoss.h"
 #include "../../../GameConstants.h"
+#include "../../../LevelManager.h"
 #include "../../../AI/AIStateMachine.h"
 #include "../../../AI/Behaviors/PatrolBehavior.h"
 #include "../../../AI/Behaviors/ChaseBehavior.h"
@@ -10,8 +11,8 @@
 #include "../../../Random.h"
 #include "../../../Components/Physics/Collider.h"
 
-WhiteBoss::WhiteBoss(class Game* game, Vector2 position, float forwardSpeed)
-	: BossBase(game, position, forwardSpeed)
+WhiteBoss::WhiteBoss(Vector2 position, float forwardSpeed)
+	: BossBase(position, forwardSpeed)
 	, mFootstepTimer(0.0f)
 {
 	mAnimatorComponent = new AnimatorComponent(this, "WhiteBossAnim", GameConstants::TILE_SIZE * 2.0f, GameConstants::TILE_SIZE * 2.0f);
@@ -59,7 +60,7 @@ void WhiteBoss::OnUpdate(float deltaTime)
 			std::string sound2 = "e11_boss_step_on_grass2.wav";
 
 			// Play random one of the two sounds
-			GetGame()->GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 1.0f);
+			Game::Instance().GetAudio()->PlaySound(rand() % 2 ? sound1 : sound2, false, 1.0f);
 		}
 	}
 	else
@@ -86,7 +87,7 @@ void WhiteBoss::CheckAndTriggerHealing()
 	if (healingSkill->ShouldTriggerHealing())
 	{
 		// Get player position for skill target (healing doesn't need it, but StartSkill requires it)
-		auto player = GetGame()->GetPlayer();
+		auto player = LevelManager::Instance().GetPlayer();
 		Vector2 targetPos = player ? player->GetPosition() : GetPosition();
 		healingSkill->StartSkill(targetPos);
 	}

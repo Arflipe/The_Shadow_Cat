@@ -8,7 +8,7 @@
 class OrangeCat : public EnemyBase
 {
 public:
-	explicit OrangeCat(Game* game, Vector2 position);
+	explicit OrangeCat(Vector2 position);
 
 	void OnUpdate(float deltaTime) override;
 
